@@ -12,6 +12,13 @@ app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 mail = Mail(app)
 
+def get_db_connection():
+    conn = psycopg2.connect(host='localhost',
+                            database='capstone_db',
+                            user='capstone',
+                            password='password')
+    return conn
+
 @app.route('/')
 def hello():
     return 'Hello, World!'
@@ -38,6 +45,17 @@ def login():
     form=LoginForm
     return render_template('login.html', title='Log In', form=form)
 
+@app.route('/courses')
+def index():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute('SELECT * FROM course;')
+    books = cur.fetchall()
+    cur.close()
+    conn.close()
+    return render_template('index.html', course=course)
 
+if __name__ == "__main__":
+    app.run()
 
 
