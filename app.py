@@ -21,7 +21,7 @@ def get_db_connection():
 
 @app.route('/')
 def hello():
-    return 'Hello, World!'
+    return 'Hello, World! App is working.'
 
 @app.route('/email')
 def sendEmail():
