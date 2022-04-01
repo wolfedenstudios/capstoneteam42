@@ -1,0 +1,38 @@
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for cattegory, message in messages %}
+        <div>
+            {{message}}
+        </div>
+        {% endfor %}
+    {%endif%}
+{%endwith%}
+<div>
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        <fieldset>
+            <legend>Register for access</legend>
+            <div>
+                {{ form.username.label }}
+                {{ form.username }}
+            </div>
+            <div>
+                {{ form.email.label }}
+                {{ form.email }}
+            </div>
+            <div>
+                {{ form.password.label }}
+                {{ form.password }}
+            </div>
+            <div>
+                {{ form.confirmPassword.label }}
+                {{ form.confirmPassword }}
+            </div>
+        </fieldset>
+        <div>
+            {{ form.submit }}
+        </div>
+
+
+    </form>
+</div>    

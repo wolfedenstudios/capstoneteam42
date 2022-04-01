@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for
+from flask import Flask, render_template, url_for, flash, redirect
 from flask_mail import Mail, Message
 from forms import RegistrationForm, LoginForm
 app = Flask(__name__)
@@ -32,17 +32,23 @@ def sendEmail():
     mail.send(msg)
     return 'Message Sent!'
 
-@app.route('/register')
+@app.route('/register', methods=['GET', 'POST'])
 def register():
-    form = RegistrationForm
+    form = RegistrationForm('/register')
     if form.validate_on_submit():
-        #send email to form.email.data
+        flash(f'Account Created for {form.username.data}!', 'success') 
+    #send email to form.email.data
+        msg = Message('registration complete', sender = 'UALR.Capstone.Team42@gmail.com', recipients= f'{form.email.data}')
+        msg.body = 'registration complete'
+        mail.send(msg)       
         print('hello world')
+        return redirect(url_for('hello'))
+
     return render_template('register.html', title='Register', form=form)
 
 @app.route('/login')
 def login():
-    form=LoginForm
+    form=LoginForm('/login')
     return render_template('login.html', title='Log In', form=form)
 
 @app.route('/courses')
