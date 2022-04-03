@@ -1,38 +1,32 @@
-{% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-        {% for cattegory, message in messages %}
-        <div>
-            {{message}}
-        </div>
-        {% endfor %}
-    {%endif%}
-{%endwith%}
-<div>
+{% extends "HTMLTemplate.html" %}
+{%block content%}
+<div class="content-section">
     <form method="POST" action="">
         {{ form.hidden_tag() }}
-        <fieldset>
-            <legend>Register for access</legend>
-            <div>
-                {{ form.username.label }}
-                {{ form.username }}
+        <fieldset class="form-group">
+            <legend class="border-bottom mb-4">Register for access</legend>
+            <div class="form-group">
+                {{ form.username.label(class="form-control-label") }}
+                {{ form.username(class="form-control form-control-lg") }}
             </div>
-            <div>
-                {{ form.email.label }}
-                {{ form.email }}
+            <div class="form-group">
+                {{ form.email.label(class="form-control-label")  }}
+                {{ form.email(class="form-control form-control-lg") }}
             </div>
-            <div>
-                {{ form.password.label }}
-                {{ form.password }}
+            <div class="form-group">
+                {{ form.password.label(class="form-control-label")  }}
+                {{ form.password(class="form-control form-control-lg") }}
             </div>
-            <div>
-                {{ form.confirmPassword.label }}
-                {{ form.confirmPassword }}
+            <div class="form-group">
+                {{ form.confirmPassword.label(class="form-control-label")  }}
+                {{ form.confirmPassword(class="form-control form-control-lg") }}
             </div>
         </fieldset>
-        <div>
-            {{ form.submit }}
+        <div class="form-gropu">
+            {{ form.submit(class="btn btn-outline-info") }}
         </div>
 
 
     </form>
 </div>    
+{% endblock content %}

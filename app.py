@@ -32,23 +32,25 @@ def sendEmail():
     mail.send(msg)
     return 'Message Sent!'
 
-@app.route('/register', methods=['GET', 'POST'])
+@app.route("/register", methods=['GET', 'POST'])
 def register():
-    form = RegistrationForm('/register')
-    if form.validate_on_submit():
-        flash(f'Account Created for {form.username.data}!', 'success') 
-    #send email to form.email.data
-        msg = Message('registration complete', sender = 'UALR.Capstone.Team42@gmail.com', recipients= f'{form.email.data}')
-        msg.body = 'registration complete'
-        mail.send(msg)       
-        print('hello world')
-        return redirect(url_for('hello'))
+    form = RegistrationForm()
+    print(form.errors)
+    if form.is_submitted():
+        print('submitted')
+        print(form.errors)
 
+    if form.validate_on_submit():
+        print('valid')
+        
+        print(form.errors)
+        flash('Account created for!', 'success')
+        return redirect(url_for('home'))
     return render_template('register.html', title='Register', form=form)
 
 @app.route('/login')
 def login():
-    form=LoginForm('/login')
+    form=LoginForm()
     return render_template('login.html', title='Log In', form=form)
 
 @app.route('/courses')
