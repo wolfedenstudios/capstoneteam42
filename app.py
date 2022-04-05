@@ -42,10 +42,14 @@ def register():
 
     if form.validate_on_submit():
         print('valid')
-        
-        print(form.errors)
-        flash('Account created for!', 'success')
-        return redirect(url_for('home'))
+        flash(f'Registration request submitted for {form.username.data}.', 'success')
+
+        msg = Message('Registration Request Submitted', 
+                  sender = 'UALR.Capstone.Team42@gmail.com',
+                  recipients = [f'{form.email.data}'])
+        msg.body = "Your registration request has been submitted."
+        mail.send(msg)
+        return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
 
 @app.route('/login')
