@@ -1,6 +1,8 @@
 from flask import Flask, render_template, url_for, flash, redirect
 from flask_mail import Mail, Message
 from forms import RegistrationForm, LoginForm
+import psycopg2
+
 app = Flask(__name__)
 app.config['SECRET_KEY']='c9086aeae8e7451dd9f38272ee4f315a'
 
@@ -36,26 +38,52 @@ def sendEmail():
 def register():
     form = RegistrationForm()
     print(form.errors)
-    if form.is_submitted():
-        print('submitted')
-        print(form.errors)
 
     if form.validate_on_submit():
-        print('valid')
         flash(f'Registration request submitted for {form.username.data}.', 'success')
+
+        #send email
 
         msg = Message('Registration Request Submitted', 
                   sender = 'UALR.Capstone.Team42@gmail.com',
                   recipients = [f'{form.email.data}'])
         msg.body = "Your registration request has been submitted."
         mail.send(msg)
+
+        #Add to database
+
+        username = form.username.data
+        email = form.email.data
+        password = form.password.data
+        acc_type = form.accessLevel.data
+
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute('INSERT INTO accounts (username, email, password, acc_type)' 'VALUES (%s, %s, %s, %s)', (username, email, password, acc_type))
+
+        conn.commit()
+        cur.close()
+        conn.close()
+
+
+
+
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
 
 @app.route('/login')
 def login():
     form=LoginForm()
+    if form.validate_on_submit():
+        print('valid')
+        #add code to search database for email, check if email exists, and check password
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute(f'SELECT * FROM accounts WHERE email={form.email.data}')
+
     return render_template('login.html', title='Log In', form=form)
+
+
 
 @app.route('/courses')
 def index():
