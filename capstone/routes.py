@@ -1,25 +1,9 @@
-from flask import Flask, render_template, url_for, flash, redirect
-from flask_mail import Mail, Message
-from forms import RegistrationForm, LoginForm
-import psycopg2
-
-app = Flask(__name__)
-app.config['SECRET_KEY']='c9086aeae8e7451dd9f38272ee4f315a'
-
-app.config['MAIL_SERVER']='smtp.gmail.com'
-app.config['MAIL_PORT'] = 465
-app.config['MAIL_USERNAME'] = 'UALR.Capstone.Team42@gmail.com'
-app.config['MAIL_PASSWORD'] = 'ualrcs42'
-app.config['MAIL_USE_TLS'] = False
-app.config['MAIL_USE_SSL'] = True
-mail = Mail(app)
-
-def get_db_connection():
-    conn = psycopg2.connect(host='localhost',
-                            database='capstone_db',
-                            user='capstone',
-                            password='password')
-    return conn
+from flask import render_template, url_for, flash, redirect
+from capstone import app
+from flask_mail import Message
+from capstone.forms import RegistrationForm, LoginForm
+from capstone import db, get_db_connection, mail
+from capstone.models import accounts
 
 @app.route('/')
 def hello():
@@ -57,14 +41,9 @@ def register():
         password = form.password.data
         acc_type = form.accessLevel.data
 
-        conn = get_db_connection()
-        cur = conn.cursor()
-        cur.execute('INSERT INTO accounts (username, email, password, acc_type)' 'VALUES (%s, %s, %s, %s)', (username, email, password, acc_type))
-
-        conn.commit()
-        cur.close()
-        conn.close()
-
+        user = accounts(username = username, email = email, password = password, acc_type = acc_type)
+        db.session.add(user)
+        db.session.commit()
 
 
 
@@ -94,8 +73,3 @@ def index():
     cur.close()
     conn.close()
     return render_template('index.html', course=course)
-
-if __name__ == "__main__":
-    app.run()
-
-
