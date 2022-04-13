@@ -38,6 +38,7 @@
             <div class="form-group">
                 {{ form.accessLevel.label(class="form-control-label")  }}
 
+                {% if form.accessLevel.errors %}
                 {{ form.accessLevel(class="form-control form-control-lg is-invalid") }}
                 <div class="invalid-feedback">
                     {% for error in form.accessLevel.errors %}
@@ -46,11 +47,12 @@
                 </div>
             {% else %}
                 {{ form.accessLevel(class="form-control form-control-lg") }}
-            {% endif %}          
+            {% endif %}
             </div>
 
             <div class="form-group">
                 {{ form.password.label(class="form-control-label")  }}
+
                 {% if form.password.errors %}
                 {{ form.password(class="form-control form-control-lg is-invalid") }}
                 <div class="invalid-feedback">
@@ -58,6 +60,7 @@
                         <span>{{ error }}</span>
                     {% endfor %}
                 </div>
+
             {% else %}
                 {{ form.password(class="form-control form-control-lg") }}
             {% endif %}
@@ -65,6 +68,7 @@
     
             <div class="form-group">
                 {{ form.confirmPassword.label(class="form-control-label")  }}
+
                 {% if form.confirmPassword.errors %}
                 {{ form.confirmPassword(class="form-control form-control-lg is-invalid") }}
                 <div class="invalid-feedback">

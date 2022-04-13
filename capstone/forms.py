@@ -22,6 +22,7 @@ class RegistrationForm(FlaskForm):
         if user:
             raise ValidationError('Account with this email already exists, or is currently waiting to be approved')
     
+    #This appears to be working but does not give an error message
     def validate_accessLevel(self, accessLevel):
         if ((accessLevel.data != 'ADMIN') and (accessLevel.data != 'ASSISTANT')):
             raise ValidationError('Access Level Must Be ADMIN or ASSISTANT')

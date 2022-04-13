@@ -4,6 +4,7 @@ from flask_mail import Message
 from capstone.forms import RegistrationForm, LoginForm
 from capstone import db, get_db_connection, mail
 from capstone.models import accounts
+from flask_login import login_user
 
 @app.route('/')
 def hello():
@@ -50,15 +51,19 @@ def register():
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
 
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     form=LoginForm()
     if form.validate_on_submit():
         print('valid')
         #add code to search database for email, check if email exists, and check password
-        conn = get_db_connection()
-        cur = conn.cursor()
-        cur.execute(f'SELECT * FROM accounts WHERE email={form.email.data}')
+
+        user = accounts.query.filter_by(email = form.email.data).first()
+        if user and (user.password == form.password.data):
+            login_user(user)
+            return redirect(url_for('hello'))
+        else:
+            flash('Login unsuccessful, check email and password', 'danger')
 
     return render_template('login.html', title='Log In', form=form)
 
