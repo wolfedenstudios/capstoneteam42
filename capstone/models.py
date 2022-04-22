@@ -2,7 +2,6 @@ import email
 from capstone import db, login_manager
 from flask_login import UserMixin
 
-db.create_all()
 
 @login_manager.user_loader
 def load_user(email):
