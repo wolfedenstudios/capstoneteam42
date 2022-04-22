@@ -60,8 +60,12 @@ def login():
 
         user = accounts.query.filter_by(email = form.email.data).first()
         if user and (user.password == form.password.data):
-            login_user(user)
-            return redirect(url_for('hello'))
+            if user.approved == True:
+                login_user(user)
+                return redirect(url_for('hello'))
+            else:
+                flash('Login unsuccessful, account not approved', 'danger')
+
         else:
             flash('Login unsuccessful, check email and password', 'danger')
 
