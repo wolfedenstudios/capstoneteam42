@@ -33,10 +33,10 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Login')
 
 class teacherForm(FlaskForm):
-    lastName = StringField('Last Name', validators=[InputRequired])
-    maxLoad = IntegerField('Max Load', validators=[InputRequired, NumberRange(min = 1, max = 4)])
+    lastName = StringField('Last Name', validators=[InputRequired()])
+    maxLoad = IntegerField('Max Load', validators=[InputRequired(), NumberRange(min = 1, max = 4)])
 
 class classForm(FlaskForm):
-    courseNum = IntegerField('Course Number', validators=[InputRequired])
-    courseTitle = StringField('Course Title', validators=[InputRequired])
+    courseNum = IntegerField('Course Number', validators=[InputRequired()])
+    courseTitle = StringField('Course Title', validators=[InputRequired()])
     
