@@ -10,7 +10,7 @@ def application(environ, start_response):
         os.environ['FLASK_CONFIG'] = 'production'
         os.environ['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:React0r2020@localhost/team42adtaa'
 
-    from app import app as _application
+    from capstone import app as _application
 
     return _application(environ, start_response)
 
