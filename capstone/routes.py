@@ -9,7 +9,7 @@ from flask_login import current_user, login_required, login_user, logout_user
 
 @app.route('/')
 def hello():
-    return render_template('base.html', title='Home')
+    return render_template('home.html', title='Home')
 
 @app.route('/email')
 def sendEmail():
