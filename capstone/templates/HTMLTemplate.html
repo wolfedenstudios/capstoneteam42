@@ -1,34 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <!doctype html>
-<html lang="en">
   <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-<title>Page Title</title>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-</head>
+   {% block meta %} {% endblock %}
+  </head>
 
 <body>
-
   <header class="header">
     <h1>Academic Department Teaching Assignments Assistant</h1>
+    <nav class="gray-bar">
+      {% block graytop %} {% endblock %}
+    </nav>
   </header>
 
-  <main class="content">
-	<button>Register</button>
-	<button>Sign in</button>
-  </main>
-
-  <div class="container">
-
-    <!--This adds the flashed messages support-->
-
-    {% with messages = get_flashed_messages(with_categories=true) %}
+<main class="content">
+<!--This adds the flashed messages support-->
+  {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
       {% for category, message in messages %}
         <div class="alert alert-{{ category }}">
@@ -38,15 +24,16 @@
     {% endif %}
   {% endwith %}
 
-    {%block content%}
-    {% endblock %}
+{% block content %} {% endblock %}
 
-  </div>
+</main>
 
-
-  <footer>
-    <p>Property of UALR</p>
-  </footer>
+<footer>
+  <nav class="gray-bar">
+    {% block graybottom %} {% endblock %}
+  </nav>
+  <p>Property of UALR</p>
+</footer>
 
 </body>
 </html>

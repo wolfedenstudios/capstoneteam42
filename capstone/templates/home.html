@@ -1,0 +1,20 @@
+{% extends "HTMLTemplate.html" %}
+
+{%block meta%}
+  <title>UALR Schedule Generator - Homescreen</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="The home page for the UALR Schedule Generator">
+  <link href="home.css" rel="stylesheet" type="text/css">
+{%endblock%}
+
+{%block graytop}
+{%endblock}
+
+{%block content%}
+  <button onclick="window.location.href = 'http://ec2-3-92-209-242.compute-1.amazonaws.com/register';">>Register</button>
+  <button onclick="window.location.href = 'http://ec2-3-92-209-242.compute-1.amazonaws.com/login';">>Log In</button>
+{%endblock%}
+
+{%block graybottom}
+{%endblock}
