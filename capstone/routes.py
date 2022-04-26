@@ -75,22 +75,10 @@ def login():
     return render_template('login.html', title='Log In', form=form)
 
 
-@app.route('/requests')
-@login_required
-def requests():
-    if (current_user.acc_type == 'ADMIN'):
-        accountList = accounts.query.filter(accounts.approved == False)
-
-        return render_template('requests.html', title='requests', accountList=accountList )
-
-    else:
-        flash('you must be admin to access this page', 'danger')
-        return redirect(url_for('hello'))
-
 
 @app.route('/add/professor')
 @login_required
-def requests():
+def addProf():
     if (current_user.acc_type == 'ADMIN'):
         accountList = accounts.query.filter(accounts.approved == False)
 
@@ -103,7 +91,7 @@ def requests():
 
 @app.route('/add/course')
 @login_required
-def requests():
+def addCourse():
     if (current_user.acc_type == 'ADMIN'):
 
         return render_template('requests.html', title='requests')
