@@ -8,11 +8,7 @@ from capstone.models import accounts, instructors, sections, output_schedule
 from flask_login import current_user, login_required, login_user, logout_user
 
 @app.route('/')
-<<<<<<< Updated upstream
-def hello():
-=======
 def home():
->>>>>>> Stashed changes
     return render_template('home.html', title='Home')
 
 @app.route('/email')
