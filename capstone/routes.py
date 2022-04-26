@@ -8,7 +8,7 @@ from flask_login import login_user
 
 @app.route('/')
 def hello():
-    return render_template('base.html', title='Home', form=form)
+    return render_template('base.html', title='Home')
 
 @app.route('/email')
 def sendEmail():
