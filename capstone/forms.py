@@ -35,8 +35,9 @@ class LoginForm(FlaskForm):
 class teacherForm(FlaskForm):
     lastName = StringField('Last Name', validators=[InputRequired()])
     maxLoad = IntegerField('Max Load', validators=[InputRequired(), NumberRange(min = 1, max = 4)])
+    disciplines = StringField('Disciplines', validators=[InputRequired()])
 
 class classForm(FlaskForm):
-    courseNum = IntegerField('Course Number', validators=[InputRequired()])
-    courseTitle = StringField('Course Title', validators=[InputRequired()])
+    Code = IntegerField('Course Number', validators=[InputRequired()])
+    Name = StringField('Course Title', validators=[InputRequired()])
     

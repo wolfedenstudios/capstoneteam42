@@ -1,10 +1,11 @@
-from flask import render_template, url_for, flash, redirect
+from sre_constants import SUCCESS
+from flask import render_template, session, url_for, flash, redirect
 from capstone import app
 from flask_mail import Message
 from capstone.forms import RegistrationForm, LoginForm
 from capstone import db, get_db_connection, mail
 from capstone.models import accounts
-from flask_login import login_user
+from flask_login import current_user, login_required, login_user, logout_user
 
 @app.route('/')
 def hello():
@@ -18,6 +19,7 @@ def sendEmail():
     msg.body = "testing email stuff"
     mail.send(msg)
     return 'Message Sent!'
+
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
@@ -51,6 +53,7 @@ def register():
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
 
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form=LoginForm()
@@ -71,6 +74,50 @@ def login():
 
     return render_template('login.html', title='Log In', form=form)
 
+
+@app.route('/requests')
+@login_required
+def requests():
+    if (current_user.acc_type == 'ADMIN'):
+        accountList = accounts.query.filter(accounts.approved == False)
+
+        return render_template('requests.html', title='requests', accountList=accountList )
+
+    else:
+        flash('you must be admin to access this page', 'danger')
+        return redirect(url_for('hello'))
+
+
+@app.route('/add/professor')
+@login_required
+def requests():
+    if (current_user.acc_type == 'ADMIN'):
+        accountList = accounts.query.filter(accounts.approved == False)
+
+        return render_template('professor.html', title='requests')
+
+    else:
+        flash('you must be admin to access this page', 'danger')
+        return redirect(url_for('hello'))
+
+
+@app.route('/add/course')
+@login_required
+def requests():
+    if (current_user.acc_type == 'ADMIN'):
+
+        return render_template('requests.html', title='requests')
+
+    else:
+        flash('you must be admin to access this page', 'danger')
+        return redirect(url_for('hello'))
+
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('hello'))    
 
 
 @app.route('/courses')

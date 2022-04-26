@@ -1,0 +1,14 @@
+{% extends "HTMLTemplate.html" %}
+{%block content%}
+    {% for accounts in accountList %}
+        <h1>{{ accounts.email }}</h1>
+        <h1>{{ accounts.acc_type }}</h1>
+        <h1>{{ accounts.password}} </h1>
+    {% endfor %}
+
+
+
+
+
+
+{% endblock content %}
