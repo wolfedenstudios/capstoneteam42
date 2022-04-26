@@ -4,11 +4,15 @@ from capstone import app
 from flask_mail import Message
 from capstone.forms import RegistrationForm, LoginForm
 from capstone import db, get_db_connection, mail
-from capstone.models import accounts
+from capstone.models import accounts, instructors, sections, output_schedule
 from flask_login import current_user, login_required, login_user, logout_user
 
 @app.route('/')
+<<<<<<< Updated upstream
 def hello():
+=======
+def home():
+>>>>>>> Stashed changes
     return render_template('home.html', title='Home')
 
 @app.route('/email')
@@ -65,7 +69,7 @@ def login():
         if user and (user.password == form.password.data):
             if user.approved == True:
                 login_user(user)
-                return redirect(url_for('hello'))
+                return redirect(url_for('home'))
             else:
                 flash('Login unsuccessful, account not approved', 'danger')
 
@@ -86,7 +90,7 @@ def addProf():
 
     else:
         flash('you must be admin to access this page', 'danger')
-        return redirect(url_for('hello'))
+        return redirect(url_for('home'))
 
 
 @app.route('/add/course')
@@ -98,14 +102,37 @@ def addCourse():
 
     else:
         flash('you must be admin to access this page', 'danger')
-        return redirect(url_for('hello'))
+        return redirect(url_for('home'))
+
+
+@app.route('/instructors')
+@login_required
+def instructors():
+    if (current_user.acc_type == 'ADMIN'):
+        instructorList = instructors.query.all()
+        return render_template('instructors.html', title='Instructor List', instructorList=instructorList)
+    else:
+        return redirect(url_for('home'))
+
+
+@app.route('/courses')
+@login_required
+def courses():
+    if (current_user.acc_type == 'ADMIN'):
+        courseList = sections.query.all()
+        return render_template('sections.html', title='section list', courseList=courseList)
+    else:
+        return redirect(url_for('home'))
+
+    
+
 
 
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('hello'))    
+    return redirect(url_for('home'))    
 
 
 @app.route('/courses')
