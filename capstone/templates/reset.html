@@ -1,0 +1,42 @@
+{% extends "HTMLTemplate.html" %}
+
+{%block meta%}
+  <title>UALR Schedule Generator - Login</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="The login menu for the UALR Schedule Generator">
+  <link href="login.css" rel="stylesheet" type="text/css">
+{%endblock%}
+
+{%block graytop %}
+{%endblock %}
+
+{%block content%}
+<div class="content-section">
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        <fieldset class="form-group">
+            <legend class="border-bottom mb-4">Reset Password</legend>
+            <div class="form-group">
+                {{ form.currentPassword.label(class="form-control-label")  }}
+                {{ form.currentPassword(class="form-control form-control-lg") }}
+            </div>
+            <div class="form-group">
+                {{ form.newPassword.label(class="form-control-label")  }}
+                {{ form.newPassword(class="form-control form-control-lg") }}
+       	    </div>
+               <div class="form-group">
+                {{ form.confirmPassword.label(class="form-control-label")  }}
+                {{ form.confirmPassword(class="form-control form-control-lg") }}
+       	    </div>
+	 </fieldset>
+        <div class="form-group">
+            {{ form.submit(class="btn btn-outline-info") }}
+        </div>
+    </form>
+</div>  
+
+{%endblock%}
+
+{%block graybottom%}
+{%endblock%}

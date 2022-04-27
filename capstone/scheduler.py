@@ -1,5 +1,7 @@
 import enum
 import random
+from capstone import db
+from capstone.models import instructors, sections, output_schedule
 Instructors = instructorQueue
 MaxLoadedInstructors = []
 outputSchedules = [ ]
@@ -225,6 +227,21 @@ def importData(prof_or_course, record_num, file_path):
     #print("Data imported as: {}".format(one_go))
 
 
+     # add data to course queue
+    if prof_or_course == 0:
+       code = int(one_go[0])       #0
+       dep_num = one_go[1]         #1
+       day = one_go[2]             #2
+       length = int(one_go[3])     #3
+       time = int(one_go[4])       #4
+       disc = one_go[6]            #5
+       periods = 0                 #6
+       name = one_go[5]            #7
+       Course_temp = (code,dep_num,day,length,time,disc,periods,name)
+       AllCourses.append(Course_temp)
+     # add data to instructor queue
+
+
     elif prof_or_course == 1:
       lname = one_go[0]                 #0
       maxload = int(one_go[1])          #1
@@ -239,7 +256,7 @@ def importData(prof_or_course, record_num, file_path):
       db.session.add(prof)
       db.session.commit
 
-      else:
+    else:
       print("incorrect data value: Error Code 101")
 
 

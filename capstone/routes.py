@@ -1,8 +1,9 @@
 from sre_constants import SUCCESS
 from flask import render_template, session, url_for, flash, redirect
+from sqlalchemy import null
 from capstone import app
 from flask_mail import Message
-from capstone.forms import RegistrationForm, LoginForm
+from capstone.forms import RegistrationForm, LoginForm, classForm, resetForm, teacherForm
 from capstone import db, get_db_connection, mail
 from capstone.models import accounts, instructors, sections, output_schedule
 from flask_login import current_user, login_required, login_user, logout_user
@@ -65,7 +66,11 @@ def login():
         if user and (user.password == form.password.data):
             if user.approved == True:
                 login_user(user)
-                return redirect(url_for('home'))
+                if user.email == 'ROOT_USER':
+                    return redirect(url_for('reset'))
+                else:
+                    return redirect(url_for('home'))
+
             else:
                 flash('Login unsuccessful, account not approved', 'danger')
 
@@ -76,25 +81,46 @@ def login():
 
 
 
-@app.route('/add/professor')
+@app.route('/add/professor', methods=['GET', 'POST'])
 @login_required
 def addProf():
-    if (current_user.acc_type == 'ADMIN'):
-        accountList = accounts.query.filter(accounts.approved == False)
+    if (current_user.acc_type == 'ADMIN' or current_user.acc_type == 'ROOT'):
+        form=teacherForm()
 
-        return render_template('professor.html', title='requests')
+        if form.validate_on_submit():
+                lastName = form.lastName.data
+                maxLoad = form.maxLoad.data
+                disciplines = form.disciplines.data
+                profAdd = instructors(LName = lastName, MaxLoad = maxLoad, Disciplines = disciplines)
+                db.session.add(profAdd)
+                db.session.commit()
+
+
+        return render_template('addProf.html', title='requests', form=form)
 
     else:
         flash('you must be admin to access this page', 'danger')
         return redirect(url_for('home'))
 
 
-@app.route('/add/course')
+@app.route('/add/course', methods=['GET', 'POST'])
 @login_required
 def addCourse():
-    if (current_user.acc_type == 'ADMIN'):
+    if (current_user.acc_type == 'ADMIN' or current_user.acc_type == 'ROOT'):
+        form=classForm()
 
-        return render_template('requests.html', title='requests')
+        if form.validate_on_submit():
+            Code = form.Code.data
+            Name = form.Name.data
+            disciplines = form.disciplines.data
+            deptCode = form.deptCode.data
+
+            course = sections(Code = Code, Name = Name, Disciplines = disciplines, DepartmentCode = deptCode)
+            db.session.add(course)
+            db.session.commit()
+
+
+        return render_template('addClass.html', title='requests', form=form)
 
     else:
         flash('you must be admin to access this page', 'danger')
@@ -103,8 +129,8 @@ def addCourse():
 
 @app.route('/instructors')
 @login_required
-def instructors():
-    if (current_user.acc_type == 'ADMIN'):
+def instructorList():
+    if (current_user.acc_type == 'ADMIN' or current_user.acc_type == 'ROOT'):
         instructorList = instructors.query.all()
         return render_template('instructors.html', title='Instructor List', instructorList=instructorList)
     else:
@@ -114,11 +140,29 @@ def instructors():
 @app.route('/courses')
 @login_required
 def courses():
-    if (current_user.acc_type == 'ADMIN'):
+    if (current_user.acc_type == 'ADMIN' or current_user.acc_type == 'ROOT'):
         courseList = sections.query.all()
         return render_template('sections.html', title='section list', courseList=courseList)
     else:
         return redirect(url_for('home'))
+
+@app.route('/reset', methods=['GET', 'POST'])
+@login_required
+def reset():
+    form=resetForm()
+    if form.validate_on_submit():
+
+        if current_user.password == form.currentPassword.data:
+            if form.newPassword.data == form.confirmPassword.data:
+                current_user.password = form.newPassword.data
+                db.session.commit()
+            else:
+                flash('Password is incorrect or new password does not match confirm password', 'danger')
+        return redirect(url_for('home'))
+    return render_template('reset.html', title = 'reset password', form=form)
+
+
+    
 
     
 

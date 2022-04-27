@@ -1,4 +1,5 @@
-﻿from flask_wtf import FlaskForm
+﻿from flask import Flask
+from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField, PasswordField, SubmitField
 from wtforms.validators import InputRequired, Length, Email, EqualTo, ValidationError, NumberRange
 from capstone import db
@@ -28,16 +29,28 @@ class RegistrationForm(FlaskForm):
             raise ValidationError('Access Level Must Be ADMIN or ASSISTANT')
 
 class LoginForm(FlaskForm):
-    email = StringField('Email', validators=[InputRequired(),Email()])
-    password = PasswordField('Password', validators=[InputRequired()])
+    email = StringField('Email', validators=[InputRequired()])
+    password = PasswordField('Password')
     submit = SubmitField('Login')
+
+class resetForm(FlaskForm):
+    currentPassword = PasswordField('Current Password')
+    newPassword = PasswordField('New Password', validators=[InputRequired()])
+    confirmPassword = PasswordField('Confirm New Password', validators=[InputRequired()])
+    submit = SubmitField('Reset Password')
+
 
 class teacherForm(FlaskForm):
     lastName = StringField('Last Name', validators=[InputRequired()])
     maxLoad = IntegerField('Max Load', validators=[InputRequired(), NumberRange(min = 1, max = 4)])
     disciplines = StringField('Disciplines', validators=[InputRequired()])
+    submit = SubmitField('Add Instructor')
+
 
 class classForm(FlaskForm):
     Code = IntegerField('Course Number', validators=[InputRequired()])
     Name = StringField('Course Title', validators=[InputRequired()])
-    
+    disciplines = StringField('Disciplines', validators=[InputRequired()])
+    deptCode = StringField('Department Code', validators=[InputRequired()])
+    submit = SubmitField('Add Section')
+
