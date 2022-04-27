@@ -224,20 +224,7 @@ def importData(prof_or_course, record_num, file_path):
     one_go = [name.strip() for name in data_string.split(':')[i].split(',')]
     #print("Data imported as: {}".format(one_go))
 
-    
-    # add data to course queue
-    if prof_or_course == 0:
-      code = int(one_go[0])       #0
-      dep_num = one_go[1]         #1
-      day = one_go[2]             #2
-      length = int(one_go[3])     #3
-      time = int(one_go[4])       #4
-      disc = one_go[6]            #5
-      periods = 0                 #6
-      name = one_go[5]            #7
-      Course_temp = (code,dep_num,day,length,time,disc,periods,name)
-      AllCourses.append(Course_temp)
-    # add data to instructor queue
+
     elif prof_or_course == 1:
       lname = one_go[0]                 #0
       maxload = int(one_go[1])          #1
@@ -247,7 +234,12 @@ def importData(prof_or_course, record_num, file_path):
       currload = 0                      #5
       prof_temp = (lname,maxload,disc,courses,schedule,currload)
       instructorQueue.append(prof_temp)
-    else:
+
+      prof = instructors(LName=lname, MaxLoad=maxload, Disciplines=disc, Course_code_1=None, Course_code_2=None, Course_code_3=None, Course_code_4=None, Schedule_Day_1=None, Schedule_Day_2=None, Schedule_Day_3=None, Schedule_Day_4=None, Schedule_Day_5=None, CurrentLoad=currload)
+      db.session.add(prof)
+      db.session.commit
+
+      else:
       print("incorrect data value: Error Code 101")
 
 #############      storage conversions     #####################################
@@ -617,5 +609,75 @@ def Scheduler(UnassignedCourseQueue,instructorQueue):
       break
     else:
       i = i + 1
-  return UnassignedCourseQueue
+  return [UnassignedCourseQueue,outputSchedules]
+
+def main():
+    All_Instructors = []
+    All_Courses = []
+
+    rows = instructors.query.all()
+    # Get all the column names of the table in order to iterate through
+    column_keys = instructors.__table__.columns.keys()
+    # Temporary dictionary to keep the return value from table
+    rows_dic_temp = {}
+    rows_dic = []
+    # Iterate through the returned output data set
+    for row in rows:
+        for col in column_keys:
+            rows_dic_temp[col] = getattr(row, col)
+        rows_dic.append(rows_dic_temp)
+        rows_dic_temp= {}
+
+    for i in range(len(rows_dic)):
+        instructor = ()
+        name = rows_dic[LName]
+        maxload = rows_dic[MaxLoad]
+        disciplines = rows_dic[Disciplines]
+        courses = []
+        inst_schedule = list(schedule)
+        currentload = rows_dic[CurrentLoad]
+        instructor = (name,maxload,disciplines,courses,inst_schedule,currentload)
+        All_Instructors.append(instructor)
+
+################################################################################
+
+    rows = sections.query.all()
+    # Get all the column names of the table in order to iterate through
+    column_keys = sections.__table__.columns.keys()
+    # Temporary dictionary to keep the return value from table
+    rows_dic_temp = {}
+    rows_dic = []
+    # Iterate through the returned output data set
+    for row in rows:
+        for col in column_keys:
+            rows_dic_temp[col] = getattr(row, col)
+        rows_dic.append(rows_dic_temp)
+        rows_dic_temp= {}
+
+    for i in range(len(rows_dic)):
+        section = ()
+        code = rows_dic[Code]
+        depcode = rows_dic[DepartmentCode]
+        day = rows_dic[Day]
+        length = rows_dic[Length]
+        time = rows_dic[StartTime]
+        periods = rows_dic[periods]
+        name = rows_dic[Name]
+        section = (code,depcode,day,length,time,periods,name)
+        All_Courses.append(section)
+
+    tempList = Scheduler(All_Courses,All_Instructors)
+    UnassignedCourses = templist[0]
+    AssignedCourses = tempList[1]
+
+    for i in range(len(AssignedCourses)):
+        AssignedCourses[i] = AssignedCourses[i] + (True,)
+    for i in rang(len(UnassignedCourses)):
+        UnassignedCourses[i] = UnassignedCourses[i] + (False,)
+    outputSchedules = AssignedCourses + UnassignedCourses
+
+    for i in range(len(outputSchedules)):
+        outputSchedule = outputSchedules(Code=outputSchedules[i][0], DepartmentCode=outputSchedules[i][1], Day=outputSchedules[i][2], Length=outputSchedules[i][3], StartTime=outputSchedules[i][4], Disciplines=outputSchedules[i][5], periods=outputSchedules[i][6], Name=outputSchedules[i][7], instructor=outputSchedules[i][8], valid=outputSchedules[i][9])
+        db.session.add(outputSchedule)
+        db.session.commit
 
