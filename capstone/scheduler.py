@@ -242,6 +242,7 @@ def importData(prof_or_course, record_num, file_path):
       else:
       print("incorrect data value: Error Code 101")
 
+
 #############      storage conversions     #####################################
 def convertScheduleToStrings(schedule):
 
