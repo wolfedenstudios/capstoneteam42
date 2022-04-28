@@ -175,11 +175,25 @@ def approvePage():
                 print('hello')
                 requestedAcc.approved = True
                 db.session.commit()
+
+                        #send email
+
+                msg = Message('Registration Request Approved', 
+                  sender = 'UALR.Capstone.Team42@gmail.com',
+                  recipients = [f'{requestedAcc.email}'])
+                msg.body = "Your registration request has been approved."
+                mail.send(msg)
+
                 return redirect(url_for('approvePage'))
 
             elif request.form['submit_button'] == 'Deny':
                 db.session.query(accounts).filter(accounts.email == requestedAcc.email ).delete()
                 db.session.commit()
+                msg = Message('Registration Request Denied', 
+                  sender = 'UALR.Capstone.Team42@gmail.com',
+                  recipients = [f'{requestedAcc.email}'])
+                msg.body = "Your registration request has been denied. You may send a new registration request."
+                mail.send(msg)
                 return redirect(url_for('approvePage'))
 
 
