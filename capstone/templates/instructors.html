@@ -1,0 +1,32 @@
+{% extends "HTMLTemplate.html" %}
+{%block content%}
+{%for instructors in instructorList%}
+   <h1> {{instructors.LName}}</h1>
+   <p>  {{instructors.MaxLoad}}</p>
+   <p> {{instructors.Disciplines}}</p>
+   <p> {{instructors.Course_code_1}}</p>
+   <p> {{instructors.Course_code_2}}</p>
+   <p> {{instructors.Course_code_3}}</p>
+   <p> {{instructors.Course_code_4}}</p>
+   <p> {{instructors.Schedule_Day_1}}</p>
+   <p> {{instructors.Schedule_Day_2}}</p>
+   <p> {{instructors.Schedule_Day_3}}</p>
+   <p> {{instructors.Schedule_Day_4}}</p>
+   <p> {{instructors.Schedule_Day_5}}</p>
+    <p> {{instructors.CurrentLoad}}</p>
+{%endfor%}
+   {% endblock content %} 
+
+   LName = db.Column(db.String(20), unique=True, nullable = False, primary_key = True)
+   MaxLoad = db.Column(db.Integer, nullable = False)
+   Disciplines = db.Column(db.String(99), nullable = False)
+   Course_code_1 = db.Column(db.Integer, nullable = True)
+   Course_code_2 = db.Column(db.Integer, nullable = True)
+   Course_code_3 = db.Column(db.Integer, nullable = True)
+   Course_code_4 = db.Column(db.Integer, nullable = True)
+   Schedule_Day_1 = db.Column(db.String(30), nullable = True)
+   Schedule_Day_2 = db.Column(db.String(30), nullable = True)
+   Schedule_Day_3 = db.Column(db.String(30), nullable = True)
+   Schedule_Day_4 = db.Column(db.String(30), nullable =True)
+   Schedule_Day_5 = db.Column(db.String(30), nullable = True)
+   CurrentLoad = db.Column(db.Integer, nullable = False, default=0)

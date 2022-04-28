@@ -1,0 +1,16 @@
+{% extends "HTMLTemplate.html" %}
+{%block content%}
+{%for sections in courseList%}
+   <h1> {{sections.Code}}</h1>
+   <p>  {{sections.DepartmentCode}}</p>
+   <p> {{sections.Day}}</p>
+   <p> {{sections.Length}}</p>
+   <p> {{sections.StartTime}}</p>
+   <p> {{sections.Disciplines}}</p>
+   <p> {{sections.Periods}}</p>
+   <p> {{sections.Name}}</p>
+    <p> {{sections.instructor}}</p>
+{%endfor%}
+
+   {% endblock content %} 
+

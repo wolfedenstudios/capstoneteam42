@@ -3,7 +3,7 @@ from flask import render_template, session, url_for, flash, redirect, request
 from sqlalchemy import null
 from capstone import app
 from flask_mail import Message
-from capstone.forms import RegistrationForm, LoginForm, classForm, requestForm, resetForm, teacherForm
+from capstone.forms import RegistrationForm, LoginForm, classForm, resetForm, teacherForm
 from capstone import db, get_db_connection, mail
 from capstone.models import accounts, instructors, sections, output_schedule
 from flask_login import current_user, login_required, login_user, logout_user
@@ -81,9 +81,9 @@ def login():
 
 
 
-@app.route('/add/professor', methods=['GET', 'POST'])
+@app.route('/add/instructor', methods=['GET', 'POST'])
 @login_required
-def addProf():
+def addInstructor():
     if (current_user.acc_type == 'ADMIN' or current_user.acc_type == 'ROOT'):
         form=teacherForm()
 
@@ -137,21 +137,22 @@ def instructorList():
         return redirect(url_for('home'))
 
 
-@app.route('/courses')
+@app.route('/sections')
 @login_required
-def courses():
+def sectionsList():
     if (current_user.acc_type == 'ADMIN' or current_user.acc_type == 'ROOT'):
         courseList = sections.query.all()
         return render_template('sections.html', title='section list', courseList=courseList)
     else:
         return redirect(url_for('home'))
 
+#reset page
 @app.route('/reset', methods=['GET', 'POST'])
 @login_required
 def reset():
     form=resetForm()
     if form.validate_on_submit():
-
+        #if the form is valid and the passwords match, change the password of current user and commit to the database
         if current_user.password == form.currentPassword.data:
             if form.newPassword.data == form.confirmPassword.data:
                 current_user.password = form.newPassword.data
@@ -165,12 +166,13 @@ def reset():
 @app.route('/approve', methods=['GET', 'POST'])
 @login_required
 def approvePage():
-    form = requestForm()
 
     if (current_user.acc_type == 'ROOT'):
         requestedAcc = accounts.query.filter_by(approved = False).first()
         
+        #if the method is post, check which button was pressed
         if request.method == 'POST':
+            #if the approve button was pressed go to the account for the request and set approved value to True
             if request.form['submit_button'] == 'Approve':
                 print('hello')
                 requestedAcc.approved = True
@@ -183,9 +185,10 @@ def approvePage():
                   recipients = [f'{requestedAcc.email}'])
                 msg.body = "Your registration request has been approved."
                 mail.send(msg)
-
+                #redirect to the same page to refresh
                 return redirect(url_for('approvePage'))
 
+            #if deny button is pressed query the database for the account with the matching email and delete that row
             elif request.form['submit_button'] == 'Deny':
                 db.session.query(accounts).filter(accounts.email == requestedAcc.email ).delete()
                 db.session.commit()
@@ -194,11 +197,12 @@ def approvePage():
                   recipients = [f'{requestedAcc.email}'])
                 msg.body = "Your registration request has been denied. You may send a new registration request."
                 mail.send(msg)
+                #redirect to same page to refresh
                 return redirect(url_for('approvePage'))
 
 
         
-        return render_template('requests.html', title='Approve or Deny Registration', accountList = requestedAcc, form = form)
+        return render_template('requests.html', title='Approve or Deny Registration', accountList = requestedAcc)
 
     
 
