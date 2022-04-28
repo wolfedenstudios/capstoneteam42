@@ -1,8 +1,5 @@
 import enum
 import random
-from capstone import db
-from capstone.models import instructors, sections, output_schedule
-Instructors = instructorQueue
 MaxLoadedInstructors = []
 outputSchedules = [ ]
 instructorQueue = []
@@ -227,22 +224,24 @@ def importData(prof_or_course, record_num, file_path):
     #print("Data imported as: {}".format(one_go))
 
 
-     # add data to course queue
-    if prof_or_course == 0:
-       code = int(one_go[0])       #0
-       dep_num = one_go[1]         #1
-       day = one_go[2]             #2
-       length = int(one_go[3])     #3
-       time = int(one_go[4])       #4
-       disc = one_go[6]            #5
-       periods = 0                 #6
-       name = one_go[5]            #7
-       Course_temp = (code,dep_num,day,length,time,disc,periods,name)
-       AllCourses.append(Course_temp)
-     # add data to instructor queue
+    # add data to course queue
+    if prof_or_course == 1:
+      code = int(one_go[0])       #0
+      dep_num = one_go[1]         #1
+      day = one_go[2]             #2
+      length = int(one_go[3])     #3
+      time = int(one_go[4])       #4
+      disc = one_go[6]            #5
+      periods = 0                 #6
+      name = one_go[5]            #7
+      Course_temp = (code,dep_num,day,length,time,disc,periods,name)
+      AllCourses.append(Course_temp)
 
-
-    elif prof_or_course == 1:
+      section = sections(Code=code, DepartmentCode=dep_num, Day=day, Length=length, StartTime=time, Disciplines=disc, Periods=periods, Name=name, instructor=None)
+      db.session.add(section)
+      db.session.commit
+    # add data to instructor queue
+    elif prof_or_course == 0:
       lname = one_go[0]                 #0
       maxload = int(one_go[1])          #1
       disc = one_go[2]                  #2
@@ -252,12 +251,12 @@ def importData(prof_or_course, record_num, file_path):
       prof_temp = (lname,maxload,disc,courses,schedule,currload)
       instructorQueue.append(prof_temp)
 
+    else:
+      print("incorrect data value: Error Code 101")
+
       prof = instructors(LName=lname, MaxLoad=maxload, Disciplines=disc, Course_code_1=None, Course_code_2=None, Course_code_3=None, Course_code_4=None, Schedule_Day_1=None, Schedule_Day_2=None, Schedule_Day_3=None, Schedule_Day_4=None, Schedule_Day_5=None, CurrentLoad=currload)
       db.session.add(prof)
       db.session.commit
-
-    else:
-      print("incorrect data value: Error Code 101")
 
 
 #############      storage conversions     #####################################
@@ -354,7 +353,7 @@ def CheckInstSched(instructor, course):
 def schedInstSched(instructor, course):   #0 = sched | 1 = overlap
   # assign class to lowest of 3 empty spots in instructor list
   instructor[3].append(course)
-      
+
   # set the value for each of the class periods to 1 from 0 in each day
   for i in range(course[6]):
 
@@ -381,7 +380,7 @@ def schedInstSched(instructor, course):   #0 = sched | 1 = overlap
     if course[2] == "F" or course[2] == "RF" or course[2] == "TRF" or course[2] == "MF" or course[2] == "MWF" or course[2] == "WF" or course[2] == "TF":
       instructor[4][4][timeholder] = 1
   return instructor
-    
+
 #####           Find match rate between instructor and section          ######
 def findMatchRate(disciplines,subjects):
   #split disciplines to individual strings
@@ -598,12 +597,12 @@ def Scheduler(UnassignedCourseQueue,instructorQueue):
         instructorQueue[BestMatches[newMatch][1]] = currentBestMatch
 
       UnassignedCourseQueue[courseindice] = UnassignedCourseQueue[courseindice] + (currentBestMatch,) #append instructor to course they are assigned to
- 
+
       #add course to output and remove from unnassigned
       outputSchedules.append(UnassignedCourseQueue[courseindice])
       del UnassignedCourseQueue[courseindice]
       print("total Courses after drop =", len(UnassignedCourseQueue), "| Total Professors below max load = ", len(instructorQueue))
-    
+
       totalCourses = len(outputSchedules) + len(UnassignedCourseQueue)
       print("Length of output schdules =", len(outputSchedules), "| legnth of unassigned courses =", len(UnassignedCourseQueue),"| UCQ + OS =", totalCourses)
       print("Match Rate:",currentBestMatchRate,"| Professor: ", currentBestMatch[0], "| load =", currentBestMatch[5])
@@ -616,7 +615,7 @@ def Scheduler(UnassignedCourseQueue,instructorQueue):
     if courseindice == len(UnassignedCourseQueue):
       courseindice = 0
       loopBreaker = loopBreaker + 1
-      if loopBreaker == 2:
+      if loopBreaker == 3:
         print("\n\nERROR: Caught infite loop. Some courses could not be assigned. Loop broke. \n\n")
         break
 
@@ -627,75 +626,98 @@ def Scheduler(UnassignedCourseQueue,instructorQueue):
       break
     else:
       i = i + 1
-  return [UnassignedCourseQueue,outputSchedules]
+
+  #replace instance of instructors with most recent instance in courses
+  all_instructors_post = instructorQueue + MaxLoadedInstructors
+  for j in range(len(all_instructors_post)):
+    for i in range(len(outputSchedules)):
+      if all_instructors_post[j][0] == outputSchedules[i][8][0]:
+        outputSchedules[i] = changeTupleValue(outputSchedules[i],all_instructors_post[j],8)
+        break
+
+  return [UnassignedCourseQueue,outputSchedules,all_instructors_post]
 
 def main():
-    All_Instructors = []
-    All_Courses = []
+  All_Instructors = []
+  All_Courses = []
 
-    rows = instructors.query.all()
-    # Get all the column names of the table in order to iterate through
-    column_keys = instructors.__table__.columns.keys()
-    # Temporary dictionary to keep the return value from table
-    rows_dic_temp = {}
-    rows_dic = []
-    # Iterate through the returned output data set
-    for row in rows:
-        for col in column_keys:
-            rows_dic_temp[col] = getattr(row, col)
-        rows_dic.append(rows_dic_temp)
-        rows_dic_temp= {}
+  rows = instructors.query.all()
+ # Get all the column names of the table in order to iterate through
+  column_keys = instructors.__table__.columns.keys()
+  # Temporary dictionary to keep the return value from table
+  rows_dic_temp = {}
+  rows_dic = []
+  # Iterate through the returned output data set
+  for row in rows:
+   for col in column_keys:
+    rows_dic_temp[col] = getattr(row, col)
+    rows_dic.append(rows_dic_temp)
+    rows_dic_temp= {}
 
-    for i in range(len(rows_dic)):
-        instructor = ()
-        name = rows_dic[LName]
-        maxload = rows_dic[MaxLoad]
-        disciplines = rows_dic[Disciplines]
-        courses = []
-        inst_schedule = list(schedule)
-        currentload = rows_dic[CurrentLoad]
-        instructor = (name,maxload,disciplines,courses,inst_schedule,currentload)
-        All_Instructors.append(instructor)
+  #go through the instructors DB and create All_Instructors from each row
+  for i in range(len(rows_dic)):
+    instructor = ()
+    name = rows_dic[LName]
+    maxload = rows_dic[MaxLoad]
+    disciplines = rows_dic[Disciplines]
+    courses = []
+    inst_schedule = list(schedule)
+    currentload = rows_dic[CurrentLoad]
+    instructor = (name,maxload,disciplines,courses,inst_schedule,currentload)
+    All_Instructors.append(instructor)
 
-################################################################################
+  ################################################################################
 
-    rows = sections.query.all()
-    # Get all the column names of the table in order to iterate through
-    column_keys = sections.__table__.columns.keys()
-    # Temporary dictionary to keep the return value from table
-    rows_dic_temp = {}
-    rows_dic = []
-    # Iterate through the returned output data set
-    for row in rows:
-        for col in column_keys:
-            rows_dic_temp[col] = getattr(row, col)
-        rows_dic.append(rows_dic_temp)
-        rows_dic_temp= {}
+  rows = sections.query.all()
+  # Get all the column names of the table in order to iterate through
+  column_keys = sections.__table__.columns.keys()
+  # Temporary dictionary to keep the return value from table
+  rows_dic_temp = {}
+  rows_dic = []
+  # Iterate through the returned output data set
+  for row in rows:
+    for col in column_keys:
+      rows_dic_temp[col] = getattr(row, col)
+      rows_dic.append(rows_dic_temp)
+      rows_dic_temp= {}
 
-    for i in range(len(rows_dic)):
-        section = ()
-        code = rows_dic[Code]
-        depcode = rows_dic[DepartmentCode]
-        day = rows_dic[Day]
-        length = rows_dic[Length]
-        time = rows_dic[StartTime]
-        periods = rows_dic[periods]
-        name = rows_dic[Name]
-        section = (code,depcode,day,length,time,periods,name)
-        All_Courses.append(section)
+  #go through the sections DB and create All_Courses from each row
+  for i in range(len(rows_dic)):
+    section = ()
+    code = rows_dic[Code]
+    depcode = rows_dic[DepartmentCode]
+    day = rows_dic[Day]
+    length = rows_dic[Length]
+    time = rows_dic[StartTime]
+    periods = rows_dic[periods]
+    name = rows_dic[Name]
+    section = (code,depcode,day,length,time,periods,name)
+    All_Courses.append(section)
 
-    tempList = Scheduler(All_Courses,All_Instructors)
-    UnassignedCourses = templist[0]
-    AssignedCourses = tempList[1]
+  #Runs the scheduling algorithm and returns the two lists of assigned and Unassigned Courses
+  tempList = Scheduler(All_Courses,All_Instructors)
+  UnassignedCourses = tempList[0]
+  AssignedCourses = tempList[1]
+  instructors_list = tempList[2]
 
-    for i in range(len(AssignedCourses)):
-        AssignedCourses[i] = AssignedCourses[i] + (True,)
-    for i in rang(len(UnassignedCourses)):
-        UnassignedCourses[i] = UnassignedCourses[i] + (False,)
-    outputSchedules = AssignedCourses + UnassignedCourses
+  #replace instance of instructors with most recent instance in courses
 
-    for i in range(len(outputSchedules)):
-        outputSchedule = outputSchedules(Code=outputSchedules[i][0], DepartmentCode=outputSchedules[i][1], Day=outputSchedules[i][2], Length=outputSchedules[i][3], StartTime=outputSchedules[i][4], Disciplines=outputSchedules[i][5], periods=outputSchedules[i][6], Name=outputSchedules[i][7], instructor=outputSchedules[i][8], valid=outputSchedules[i][9])
-        db.session.add(outputSchedule)
-        db.session.commit
+  #Appends True Or False to the instructor based on validity of solution and then puts them all in outputSchedules
+  for i in range(len(AssignedCourses)):
+    AssignedCourses[i] = AssignedCourses[i] + (True,)
+  for i in range(len(UnassignedCourses)):
+    UnassignedCourses[i] = UnassignedCourses[i] + (False,)
+  outputSchedules = AssignedCourses + UnassignedCourses
 
+  models.output_schedule.query.delete()                                         #clears outputSchedule database
+  for i in range(len(outputSchedules)):                                         #loops through outputSchedulesand addes a row to the table for each
+    outputSchedule = outputSchedules(Code=outputSchedules[i][0], DepartmentCode=outputSchedules[i][1], Day=outputSchedules[i][2], Length=outputSchedules[i][3], STartTime=outputSchedules[i][4], Disciplines=outputSchedules[i][5], Periods=outputSchedules[i][6], Name=outputSchedules[i][7], instructor=outputSchedules[i][8], valid=outputSchedules[i][9])
+    db.session.add(outputSchedule)
+    db.session.commit
+
+  models.instructors.query.delete()                                             #clears outputSchedule database
+  for i in range(len(instructors_list)):                                        #loops through outputSchedulesand addes a row to the table for each
+    dayStrings = convertScheduleToStrings(instructors_list[i][4])
+    inst = instructors_list(LName=instructors_list[i][0], MaxLoad=instructors_list[i][1], Disciplines=instructors_list[i][2], Course_code_1=instructors_list[i][3][0], Course_code_2=instructors_list[i][3][1], Course_code_3=instructors_list[i][3][2], Course_code_4=instructors_list[i][3][3], Schedule_Day_1=dayStrings[0], Schedule_Day_2=dayStrings[1], Schedule_Day_3=dayStrings[2], Schedule_Day_4=dayStrings[3], Schedule_Day_5=dayStrings[4], CurrentLoad=instructors_list[i][5])
+    db.session.add(inst)
+    db.session.commit
