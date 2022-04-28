@@ -1,14 +1,14 @@
 {% extends "HTMLTemplate.html" %}
 {%block content%}
-    {% for accounts in accountList %}
-        <h1>{{ accounts.email }}</h1>
-        <h1>{{ accounts.acc_type }}</h1>
-        <h1>{{ accounts.password}} </h1>
-    {% endfor %}
+        <h1>{{ accountList.email }}</h1>
+        <h1>{{ accountList.acc_type }}</h1>
+        <h1>{{ accountList.password}} </h1>
+   <form method="POST" action="">
+        <div class="form-group">
+            <input type="submit" name="submit_button" value="Approve">
+            <input type="submit" name="submit_button" value="Deny">
+        </div>
 
+    </form>
+   {% endblock content %} 
 
-
-
-
-
-{% endblock content %}

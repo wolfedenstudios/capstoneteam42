@@ -1,9 +1,9 @@
 from sre_constants import SUCCESS
-from flask import render_template, session, url_for, flash, redirect
+from flask import render_template, session, url_for, flash, redirect, request
 from sqlalchemy import null
 from capstone import app
 from flask_mail import Message
-from capstone.forms import RegistrationForm, LoginForm, classForm, resetForm, teacherForm
+from capstone.forms import RegistrationForm, LoginForm, classForm, requestForm, resetForm, teacherForm
 from capstone import db, get_db_connection, mail
 from capstone.models import accounts, instructors, sections, output_schedule
 from flask_login import current_user, login_required, login_user, logout_user
@@ -161,6 +161,30 @@ def reset():
         return redirect(url_for('home'))
     return render_template('reset.html', title = 'reset password', form=form)
 
+
+@app.route('/approve', methods=['GET', 'POST'])
+@login_required
+def approvePage():
+    form = requestForm()
+
+    if (current_user.acc_type == 'ROOT'):
+        requestedAcc = accounts.query.filter_by(approved = False).first()
+        
+        if request.method == 'POST':
+            if request.form['submit_button'] == 'Approve':
+                print('hello')
+                requestedAcc.approved = True
+                db.session.commit()
+                return redirect(url_for('approvePage'))
+
+            elif request.form['submit_button'] == 'Deny':
+                db.session.query(accounts).filter(accounts.email == requestedAcc.email ).delete()
+                db.session.commit()
+                return redirect(url_for('approvePage'))
+
+
+        
+        return render_template('requests.html', title='Approve or Deny Registration', accountList = requestedAcc, form = form)
 
     
 
