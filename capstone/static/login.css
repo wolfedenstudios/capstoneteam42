@@ -49,11 +49,10 @@ footer {
   color: #ffffff;
   width: 100%;
   position: fixed;
-  left 0;
-  bottom 0;  
+  left: 0;
+  bottom: 0;  
 }
 
 footer p {
   padding: 3em 1em;
 }
-
