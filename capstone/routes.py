@@ -103,7 +103,7 @@ def addInstructor():
         return redirect(url_for('home'))
 
 
-@app.route('/add/course', methods=['GET', 'POST'])
+@app.route('/add/section', methods=['GET', 'POST'])
 @login_required
 def addCourse():
     if (current_user.acc_type == 'ADMIN' or current_user.acc_type == 'ROOT'):
