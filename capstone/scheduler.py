@@ -1,3 +1,5 @@
+from capstone import db
+from capstone.models import sections, instructors, output_schedule
 import enum
 import random
 MaxLoadedInstructors = []
