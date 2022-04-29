@@ -213,6 +213,10 @@ def schedulerFunction():
 
 @app.route('/import')
 def importFunction():
+    db.session.query(instructors).delete()
+    db.session.commit() 
+    db.session.query(sections).delete()
+    db.session.commit()     
     importData(0, 9, 'capstone/instructors.dat')
     importData(1, 27, 'capstone/sections.dat')
     return redirect(url_for('home'))

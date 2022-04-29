@@ -491,7 +491,7 @@ def reassignCourse(instructor,course,courseQueue,courseIndice):
   for i in range(len(instCourses)):
     for j in range(len(outputSchedules)):
       if outputSchedules[j][0] == instCourses[i][0]:
-        del outputSchedules[i]
+        del outputSchedules[j] #Changed this to j
         break
 
   #add inst to new course
@@ -499,6 +499,8 @@ def reassignCourse(instructor,course,courseQueue,courseIndice):
   outputSchedules.append(course)
 
   courseQueue = courseQueue + instCourses
+
+  print(courseQueue)
   return [new_instructor,courseQueue]
 
 #####         Find all instructors with discipline overlap          #####
@@ -732,9 +734,23 @@ def main():
     db.session.commit()
 
   db.session.query(instructors).delete()
-  db.session.commit()                                             #clears outputSchedule database
-  for i in range(len(instructors_list)):                                        #loops through outputSchedulesand addes a row to the table for each
+  db.session.commit()                                             #clears instructors database
+  for i in range(len(instructors_list)):                                        #loops through instructors and adds a row to the table for each
     dayStrings = convertScheduleToStrings(instructors_list[i][4])
-    inst = instructors(LName=instructors_list[i][0], MaxLoad=instructors_list[i][1], Disciplines=instructors_list[i][2], Course_code_1=instructors_list[i][3][0], Course_code_2=instructors_list[i][3][1], Course_code_3=instructors_list[i][3][2], Course_code_4=instructors_list[i][3][3], Schedule_Day_1=dayStrings[0], Schedule_Day_2=dayStrings[1], Schedule_Day_3=dayStrings[2], Schedule_Day_4=dayStrings[3], Schedule_Day_5=dayStrings[4], CurrentLoad=instructors_list[i][5])
+    print(instructors_list[i][0])
+    print(instructors_list[i])
+    inst = instructors(LName=instructors_list[i][0],
+     MaxLoad=instructors_list[i][1],
+      Disciplines=instructors_list[i][2],
+       Course_code_1=instructors_list[i][3][0],
+        Course_code_2=instructors_list[i][3][1],
+         Course_code_3=instructors_list[i][3][2],
+          Course_code_4=instructors_list[i][3][3], #error appearing here
+           Schedule_Day_1=dayStrings[0],
+            Schedule_Day_2=dayStrings[1],
+             Schedule_Day_3=dayStrings[2],
+              Schedule_Day_4=dayStrings[3],
+               Schedule_Day_5=dayStrings[4],
+                CurrentLoad=instructors_list[i][5])
     db.session.add(inst)
     db.session.commit()
