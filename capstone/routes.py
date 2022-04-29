@@ -7,6 +7,7 @@ from capstone.forms import RegistrationForm, LoginForm, classForm, resetForm, te
 from capstone import db, get_db_connection, mail
 from capstone.models import accounts, instructors, sections, output_schedule
 from flask_login import current_user, login_required, login_user, logout_user
+from capstone.scheduler import importData, main
 
 @app.route('/')
 def home():
@@ -66,7 +67,7 @@ def login():
         if user and (user.password == form.password.data):
             if user.approved == True:
                 login_user(user)
-                if user.email == 'ROOT_USER':
+                if current_user.password == 'admin':
                     return redirect(url_for('reset'))
                 else:
                     return redirect(url_for('home'))
@@ -103,7 +104,7 @@ def addInstructor():
         return redirect(url_for('home'))
 
 
-@app.route('/add/section', methods=['GET', 'POST'])
+@app.route('/add/course', methods=['GET', 'POST'])
 @login_required
 def addCourse():
     if (current_user.acc_type == 'ADMIN' or current_user.acc_type == 'ROOT'):
@@ -203,6 +204,21 @@ def approvePage():
 
         
         return render_template('requests.html', title='Approve or Deny Registration', accountList = requestedAcc)
+
+@app.route('/scheduler')
+@login_required
+def schedulerFunction():
+    main()
+    return redirect(url_for('home'))
+
+@app.route('/import')
+def importFunction():
+    importData(0, 9, 'capstone/instructors.dat')
+    importData(1, 27, 'capstone/sections.dat')
+    return redirect(url_for('home'))
+
+
+
 
     
 
