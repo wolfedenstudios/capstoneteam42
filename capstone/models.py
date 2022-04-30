@@ -61,6 +61,6 @@ class output_schedule(db.Model):
     Disciplines = db.Column(db.String(), nullable = False)
     Periods = db.Column(db.Integer, nullable = False)
     Name = db.Column(db.String(50), nullable = False)
-    instructor = db.Column(db.String(20), nullable = True)
+    instructor = db.Column(db.String(20), nullable = False)
     valid = db.Column(db.Boolean, nullable = False)
  
