@@ -646,6 +646,12 @@ def Scheduler(UnassignedCourseQueue,instructorQueue):
   return [UnassignedCourseQueue,outputSchedules,all_instructors_post]
 
 def main():
+
+  print('running scheduling algorithm')
+
+  db.session.query(output_schedule).delete()
+  db.session.commit()
+
   All_Instructors = []
   All_Courses = []
 
@@ -677,6 +683,7 @@ def main():
     All_Instructors.append(instructor)
 
   ################################################################################
+
 
   rows = sections.query.all()
   # Get all the column names of the table in order to iterate through
@@ -728,29 +735,48 @@ def main():
   db.session.query(output_schedule).delete()
   db.session.commit()                                         #clears outputSchedule database
   for i in range(len(outputSchedules)): 
-    print(outputSchedules[i][8][0])                                        #loops through outputSchedulesand addes a row to the table for each
+
+  #loops through outputSchedulesand addes a row to the table for each
+    if output_schedule.query.filter_by(Code = outputSchedules[i][0]).first():
+      break
+    print(outputSchedules[i][8][0])
     outputSchedule = output_schedule(Code=outputSchedules[i][0], DepartmentCode=outputSchedules[i][1], Day=outputSchedules[i][2], Length=outputSchedules[i][3], StartTime=outputSchedules[i][4], Disciplines=outputSchedules[i][5], Periods=outputSchedules[i][6], Name=outputSchedules[i][7], instructor=outputSchedules[i][8][0], valid=outputSchedules[i][9])
     db.session.add(outputSchedule)
     db.session.commit()
 
-  db.session.query(instructors).delete()
-  db.session.commit()                                             #clears instructors database
-  for i in range(len(instructors_list)):                                        #loops through instructors and adds a row to the table for each
-    dayStrings = convertScheduleToStrings(instructors_list[i][4])
-    print(instructors_list[i][0])
-    print(instructors_list[i])
-    inst = instructors(LName=instructors_list[i][0],
-     MaxLoad=instructors_list[i][1],
-      Disciplines=instructors_list[i][2],
-       Course_code_1=instructors_list[i][3][0],
-        Course_code_2=instructors_list[i][3][1],
-         Course_code_3=instructors_list[i][3][2],
-          Course_code_4=instructors_list[i][3][3], #error appearing here
-           Schedule_Day_1=dayStrings[0],
-            Schedule_Day_2=dayStrings[1],
-             Schedule_Day_3=dayStrings[2],
-              Schedule_Day_4=dayStrings[3],
-               Schedule_Day_5=dayStrings[4],
-                CurrentLoad=instructors_list[i][5])
-    db.session.add(inst)
-    db.session.commit()
+
+  #db.session.query(instructors).delete()
+  #db.session.commit()                                             #clears instructors database
+  #loops through instructors and adds a row to the table for each
+  #for i in range(len(instructors_list)):
+    #print(instructors_list[i])
+    #dayStrings = convertScheduleToStrings(instructors_list[i][4])
+    #print(instructors_list[i][0])
+    #print(instructors_list[i][3])
+    #j = len(instructors_list[i][3])
+    #print('the length of instructors_list[i][3] is ', j)
+    #while j < 4:
+    #  print('appending list')
+    #  instructors_list[i][3].append((238001, 'CPSC', 'RF', 75, 1830, 'Networks.Programming Languages', 3, 'Algorithm'))
+    #  j+=1
+    #print(instructors_list[i][4])
+    #j = len(dayStrings)
+    #while j < 4:
+    #  dayStrings.append('000')
+    #  j+=1
+
+    #inst = instructors(LName=instructors_list[i][0],
+    # MaxLoad=instructors_list[i][1],
+    #  Disciplines=instructors_list[i][2],
+    #   Course_code_1=instructors_list[i][3][0][0],
+    #    Course_code_2=instructors_list[i][3][1][0],
+    #     Course_code_3=instructors_list[i][3][2][0],
+    #      Course_code_4=instructors_list[i][3][3][0],
+    #       Schedule_Day_1=dayStrings[0],
+    #        Schedule_Day_2=dayStrings[1],
+    #         Schedule_Day_3=dayStrings[2],
+    #          Schedule_Day_4=dayStrings[3],
+    #           Schedule_Day_5=dayStrings[4],
+    #            CurrentLoad=instructors_list[i][5])
+    #db.session.add(inst)
+    #db.session.commit()

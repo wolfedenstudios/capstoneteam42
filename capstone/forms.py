@@ -39,10 +39,6 @@ class resetForm(FlaskForm):
     confirmPassword = PasswordField('Confirm New Password', validators=[InputRequired()])
     submit = SubmitField('Reset Password')
 
-class requestForm(FlaskForm):
-    approve = SubmitField('Approve Account')
-    deny = SubmitField('Deny Account')
-
 class teacherForm(FlaskForm):
     lastName = StringField('Last Name', validators=[InputRequired()])
     maxLoad = IntegerField('Max Load', validators=[InputRequired(), NumberRange(min = 1, max = 4)])

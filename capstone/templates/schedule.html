@@ -25,12 +25,17 @@
             <th>Meet Times</th>
             <th>Validity</th>
           </tr>
-          {%for blank in blanks%}
-            <td>{{blank[0]}}</td>
-            <td>{{blank[1]}}</td>
-            <td>{{blank[2]}}</td>
-            <td>{{blank[3]}}</td>
-            <td>{{blank[4]}}</td>
+          {%for output_schedule in outputSchedule%}
+            <td>{{output_schedule.Code}}</td>
+            <td>{{output_schedule.DepartmentCode}}</td>
+            <td>{{output_schedule.Day}}</td>
+            <td>{{output_schedule.Length}}</td>
+            <td>{{output_schedule.StartTime}}</td>
+            <td>{{output_schedule.Disciplines}}</td>
+            <td>{{output_schedule.Periods}}</td>
+            <td>{{output_schedule.Name}}</td>
+            <td>{{output_schedule.instructor}}</td>
+            <td>{{output_schedule.valid}}</td>
           </tr>
           {%endfor%}
         </table>
@@ -40,5 +45,9 @@
 {%endblock%}
 
 {%block graybottom%}
-  <button class="new schedule">Generate a New Schedule</button>
+<form method="POST" action="">
+  <div class="form-group">
+    <input type="submit" name="submit_button" value="run">
+  </div>
+</form>
 {%endblock%}

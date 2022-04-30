@@ -205,11 +205,20 @@ def approvePage():
         
         return render_template('requests.html', title='Approve or Deny Registration', accountList = requestedAcc)
 
-@app.route('/scheduler')
+@app.route('/scheduler', methods=['GET', 'POST'])
 @login_required
 def schedulerFunction():
-    main()
-    return redirect(url_for('home'))
+    outputSchedule = output_schedule.query.all()
+    if request.method == 'POST':
+        if request.form['submit_button'] == 'run':
+            print('running')
+            main()
+    return render_template('schedule.html', outputSchedule = outputSchedule)
+
+
+
+
+
 
 @app.route('/import')
 def importFunction():
