@@ -637,11 +637,12 @@ def Scheduler(UnassignedCourseQueue,instructorQueue):
 
   #replace instance of instructors with most recent instance in courses
   all_instructors_post = instructorQueue + MaxLoadedInstructors
-  for j in range(len(all_instructors_post)):
-    for i in range(len(outputSchedules)):
-      if all_instructors_post[j][0] == outputSchedules[i][8][0]:
-        outputSchedules[i] = changeTupleValue(outputSchedules[i],all_instructors_post[j],8)
-        break
+  #for j in range(len(all_instructors_post)):
+  #  for i in range(len(outputSchedules)):
+  #    if all_instructors_post[j][0] == outputSchedules[i][8][0]:
+  #      print('replacing data with ',outputSchedules[i][8][0])
+  #      outputSchedules[i] = changeTupleValue(outputSchedules[i],all_instructors_post[j],8)
+  #      break
 
   return [UnassignedCourseQueue,outputSchedules,all_instructors_post]
 
@@ -651,6 +652,8 @@ def main():
 
   db.session.query(output_schedule).delete()
   db.session.commit()
+
+
 
   All_Instructors = []
   All_Courses = []
@@ -744,6 +747,28 @@ def main():
       print(outputSchedules[i][8][0])
     else:
       print('course already in database')
+  
+  return
+
+  outputSchedules.clear()
+  AssignedCourses.clear()
+  UnassignedCourses.clear()
+  print('clearing instructors')
+  instructors_list.clear() 
+  instructorQueue.clear()
+  MaxLoadedInstructors.clear()
+  inst_schedule.clear()
+  tempList.clear()
+  rows.clear()
+  rows_dic.clear()
+  rows_dic_temp.clear()
+  All_Instructors.clear()
+
+  print(outputSchedules)
+  print(AssignedCourses)
+  print(UnassignedCourses)
+  for i in range(len(instructors_list)):
+     print(i, '-', instructors_list[i][0])
 
   #db.session.query(instructors).delete()
   #db.session.commit()                                             #clears instructors database

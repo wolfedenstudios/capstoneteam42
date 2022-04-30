@@ -227,8 +227,8 @@ def importFunction():
     db.session.commit() 
     db.session.query(sections).delete()
     db.session.commit()     
-    importData(0, 9, 'capstone/instructors.dat')
-    importData(1, 27, 'capstone/sections.dat')
+    importData(0, 9, 'capstone/prof_data.dat')
+    importData(1, 29, 'capstone/course_data.dat')
     return redirect(url_for('home'))
 
 
