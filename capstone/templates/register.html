@@ -1,4 +1,16 @@
 {% extends "HTMLTemplate.html" %}
+
+{%block meta%}
+  <title>UALR Schedule Generator - Register</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="The register page for the UALR Schedule Generator">
+  <link href="/static/register.css" rel="stylesheet" type="text/css">
+{%endblock%}
+
+{%block graytop %}
+{%endblock %}
+
 {%block content%}
 <div class="content-section">
     <form method="POST" action="">
@@ -93,3 +105,6 @@
     </form>
 </div>    
 {% endblock content %}
+
+{%block graybottom%}
+{%endblock%}

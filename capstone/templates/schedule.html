@@ -1,0 +1,44 @@
+{% extends "HTMLTemplate.html" %}
+
+{%block meta%}
+  <title>UALR Schedule Generator - Schedules</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="The Schedule Page for the UALR Schedule Generator">
+  <link href="/static/schedule.css" rel="stylesheet" type="text/css">
+{%endblock%}
+
+{%block graytop%}
+   <div class="schedule">Generated Schedule*</div>
+{%endblock%}
+
+{%block content%}
+  <div class='container'>
+    <div class="row pb-5">
+      <div class="col-md-10 col-lg-8 mx-lg-auto mx-md-auto">
+      <h1 class="pt-5 pb-2">Successfully Assigned Classes</h1>
+        <table class="table">
+          <tr>
+            <th>Class Number</th>
+            <th>Instructor</th>
+            <th>Days</th>
+            <th>Meet Times</th>
+            <th>Validity</th>
+          </tr>
+          {%for blank in blanks%}
+            <td>{{blank[0]}}</td>
+            <td>{{blank[1]}}</td>
+            <td>{{blank[2]}}</td>
+            <td>{{blank[3]}}</td>
+            <td>{{blank[4]}}</td>
+          </tr>
+          {%endfor%}
+        </table>
+      </div>
+    </div>
+  </div>  
+{%endblock%}
+
+{%block graybottom%}
+  <button class="new schedule">Generate a New Schedule</button>
+{%endblock%}
