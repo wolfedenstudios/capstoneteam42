@@ -73,10 +73,10 @@ def login():
                     return redirect(url_for('home'))
 
             else:
-                flash('Login unsuccessful, account not approved', 'danger')
+                flash('Login unsuccessful, account not approved.', 'danger')
 
         else:
-            flash('Login unsuccessful, check email and password', 'danger')
+            flash('Login unsuccessful, please check email and password.', 'danger')
 
     return render_template('login.html', title='Log In', form=form)
 
@@ -100,7 +100,7 @@ def addInstructor():
         return render_template('addProf.html', title='requests', form=form)
 
     else:
-        flash('you must be admin to access this page', 'danger')
+        flash('You must be an admin to access this page!', 'danger')
         return redirect(url_for('home'))
 
 
@@ -124,7 +124,7 @@ def addCourse():
         return render_template('addClass.html', title='requests', form=form)
 
     else:
-        flash('you must be admin to access this page', 'danger')
+        flash('You must be an admin to access this page!', 'danger')
         return redirect(url_for('home'))
 
 
@@ -159,7 +159,7 @@ def reset():
                 current_user.password = form.newPassword.data
                 db.session.commit()
             else:
-                flash('Password is incorrect or new password does not match confirm password', 'danger')
+                flash('Old Password is incorrect or the new password does not match the confirmed password.', 'danger')
         return redirect(url_for('home'))
     return render_template('reset.html', title = 'reset password', form=form)
 
