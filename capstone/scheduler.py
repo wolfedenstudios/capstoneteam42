@@ -628,12 +628,12 @@ def Scheduler(UnassignedCourseQueue,instructorQueue):
         break
 
 
-    print("")
-    if i == 50:
-      print("\n\nERROR: Caught infite loop. Some courses could not be assigned. Loop broke. \n\n")
-      break
-    else:
-      i = i + 1
+    #print("")
+    #if i == 100000000:
+    #  print("\n\nERROR: Caught infite loop. Some courses could not be assigned. Loop broke. \n\n")
+    #  break
+    #else:
+    #  i = i + 1
 
   #replace instance of instructors with most recent instance in courses
   all_instructors_post = instructorQueue + MaxLoadedInstructors
@@ -743,7 +743,6 @@ def main():
     outputSchedule = output_schedule(Code=outputSchedules[i][0], DepartmentCode=outputSchedules[i][1], Day=outputSchedules[i][2], Length=outputSchedules[i][3], StartTime=outputSchedules[i][4], Disciplines=outputSchedules[i][5], Periods=outputSchedules[i][6], Name=outputSchedules[i][7], instructor=outputSchedules[i][8][0], valid=outputSchedules[i][9])
     db.session.add(outputSchedule)
     db.session.commit()
-
 
   #db.session.query(instructors).delete()
   #db.session.commit()                                             #clears instructors database
