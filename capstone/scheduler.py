@@ -737,12 +737,13 @@ def main():
   for i in range(len(outputSchedules)): 
 
   #loops through outputSchedulesand addes a row to the table for each
-    if output_schedule.query.filter_by(Code = outputSchedules[i][0]).first():
-      break
-    print(outputSchedules[i][8][0])
-    outputSchedule = output_schedule(Code=outputSchedules[i][0], DepartmentCode=outputSchedules[i][1], Day=outputSchedules[i][2], Length=outputSchedules[i][3], StartTime=outputSchedules[i][4], Disciplines=outputSchedules[i][5], Periods=outputSchedules[i][6], Name=outputSchedules[i][7], instructor=outputSchedules[i][8][0], valid=outputSchedules[i][9])
-    db.session.add(outputSchedule)
-    db.session.commit()
+    if not output_schedule.query.filter_by(Code = outputSchedules[i][0]).first():
+      outputSchedule = output_schedule(Code=outputSchedules[i][0], DepartmentCode=outputSchedules[i][1], Day=outputSchedules[i][2], Length=outputSchedules[i][3], StartTime=outputSchedules[i][4], Disciplines=outputSchedules[i][5], Periods=outputSchedules[i][6], Name=outputSchedules[i][7], instructor=outputSchedules[i][8][0], valid=outputSchedules[i][9])
+      db.session.add(outputSchedule)
+      db.session.commit() 
+      print(outputSchedules[i][8][0])
+    else:
+      print('course already in database')
 
   #db.session.query(instructors).delete()
   #db.session.commit()                                             #clears instructors database

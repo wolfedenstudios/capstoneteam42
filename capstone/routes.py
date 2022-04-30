@@ -209,6 +209,7 @@ def approvePage():
 @login_required
 def schedulerFunction():
     outputSchedule = output_schedule.query.all()
+    print(output_schedule.query.all())
     if request.method == 'POST':
         if request.form['submit_button'] == 'run':
             print('running')
