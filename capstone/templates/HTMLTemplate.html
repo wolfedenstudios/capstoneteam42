@@ -9,10 +9,13 @@
 <body>
   <header class="header">
     <h1>Academic Department Teaching Assignments Assistant</h1>
-    <nav class="gray-bar">
-      {% block graytop %} {% endblock %}
-    </nav>
   </header>
+
+  <nav class="gray-bar">
+    <div class="gray-top">
+      {% block graytop %} {% endblock %}
+    </div>
+  </nav>
 
 <main class="content">
 <!--This adds the flashed messages support-->
@@ -30,9 +33,11 @@
 
 </main>
 
-<footer>
+<footer id="sticky-footer">
   <nav class="gray-bar">
-    {% block graybottom %} {% endblock %}
+     <div class="gray-bottom">  
+       {% block graybottom %} {% endblock %}
+     </div> 
   </nav>
   <p>Property of UALR</p>
   <!--the rest of boostrap, keep at the bottom-->

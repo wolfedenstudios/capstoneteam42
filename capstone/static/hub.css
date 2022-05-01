@@ -21,11 +21,56 @@ header {
   background-color: #4f0d1b;
   color: #ffffff;
   font-size: 1.5rem;
-  height: 10vw;
+}
+
+.logout{
+  display: inline-block;
+  border-radius: 4px;
+  margin-top: 10px;
+  margin-right: 20px;
+  top: 0;
+  right: 0;
+  position: absolute;
+  padding: 5px;
+  transition: all 0.5s;
+  cursor: pointer;
+  }
+  
+.logout span{
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+
+.logout span:after {
+  content: '\00bb';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
+}
+
+.logout:hover span {
+  padding-right: 10px;
+}
+
+.logout:hover span:after {
+  opacity: 1;
+  right: 0;
 }
 
 header h1 {
   padding: 1em;
+}
+
+.gray-top{
+  display: flex;
+}
+
+.gray-bottom{
+  display: flex;
 }
 
 .gray-bar {
@@ -35,6 +80,7 @@ header h1 {
   background-color: #d1d1d1;
   color: #060606;
   height: 30px;
+  width: 100%;
 }
 
 main {
@@ -91,9 +137,7 @@ footer {
   background-color: gray;
   color: #ffffff;
   width: 100%;
-  position: sticky;
-  bottom: 0;
-  height: 5vw;
+  margin-top: auto;
 }
 
 footer p {
