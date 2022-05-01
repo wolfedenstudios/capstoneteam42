@@ -8,9 +8,18 @@
   <link href="/static/schedule.css" rel="stylesheet" type="text/css">
 {%endblock%}
 
-{%block graytop%}
-   <div class="schedule">Generated Schedule</div>
+{%block logbutton%}
+  <button class="logout" onclick="window.location.href = 'http://ec2-3-92-209-242.compute-1.amazonaws.com/logout';"><span>Log Out </span></button>  
 {%endblock%}
+
+{%block graytop %}
+  <button class="navbutton" onclick="window.location.href = 'http://ec2-3-92-209-242.compute-1.amazonaws.com/???';"><span>Back to Hub </span></button>
+  <button class="navbutton" onclick="window.location.href = 'http://ec2-3-92-209-242.compute-1.amazonaws.com/approve';"><span>Approve Users </span></button>
+  <button class="navbutton" onclick="window.location.href = 'http://ec2-3-92-209-242.compute-1.amazonaws.com/add/instructor';"><span>Add Instructor </span></button>
+  <button class="navbutton" onclick="window.location.href = 'http://ec2-3-92-209-242.compute-1.amazonaws.com/instructors';"><span>List of Instructors </span></button>
+  <button class="navbutton" onclick="window.location.href = 'http://ec2-3-92-209-242.compute-1.amazonaws.com/add/course';"><span>Add Course </span></button>
+  <button class="navbutton" onclick="window.location.href = 'http://ec2-3-92-209-242.compute-1.amazonaws.com/sections';"><span>List of Courses </span></button>
+{%endblock %}
 
 {%block content%}
   <div class='container'>
@@ -51,7 +60,7 @@
 {%block graybottom%}
 <form method="POST" action="">
   <div class="form-group">
-    <input type="submit" name="submit_button" value="run">
+    <input type="submit" name="submit_button" value="Generate Schedule">
   </div>
 </form>
 {%endblock%}
