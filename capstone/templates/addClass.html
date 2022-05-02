@@ -13,7 +13,7 @@
 {%endblock%}
 
 {%block graytop %}
-  <button class="navbutton" onclick="window.location.href = 'http://ec2-3-92-209-242.compute-1.amazonaws.com/???';"><span>Back to Hub </span></button>
+  <button class="navbutton" onclick="window.location.href = 'http://ec2-3-92-209-242.compute-1.amazonaws.com/hub';"><span>Back to Hub </span></button>
   <button class="navbutton" onclick="window.location.href = 'http://ec2-3-92-209-242.compute-1.amazonaws.com/approve';"><span>Approve Users </span></button>
   <button class="navbutton" onclick="window.location.href = 'http://ec2-3-92-209-242.compute-1.amazonaws.com/add/instructor';"><span>Add Instructor </span></button>
   <button class="navbutton" onclick="window.location.href = 'http://ec2-3-92-209-242.compute-1.amazonaws.com/instructors';"><span>List of Instructors </span></button>
@@ -26,7 +26,7 @@
     <form method="POST" action="">
         {{ form.hidden_tag() }}
         <fieldset class="form-group">
-            <legend class="border-bottom mb-4">Reset Password</legend>
+            <legend class="border-bottom mb-4">Add Course</legend>
             <div class="form-group">
                 {{ form.Code.label(class="form-control-label")  }}
                 {{ form.Code(class="form-control form-control-lg") }}

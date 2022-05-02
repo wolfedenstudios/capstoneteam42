@@ -24,6 +24,10 @@ header {
   min-height: 15vh;
 }
 
+header h1 {
+  padding: 1em;
+}
+
 .gray-bar {
   padding: 1em;
   display: flex;

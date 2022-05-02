@@ -128,7 +128,7 @@ def addCourse():
             db.session.commit()
 
 
-        return render_template('addClass.html', title='requests', form=form)
+        return render_template('addClass.html', title='Add Course', form=form)
 
     else:
         flash('You must be an admin to access this page!', 'danger')
