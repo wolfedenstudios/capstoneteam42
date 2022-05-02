@@ -95,6 +95,7 @@ main {
   justify-content: center;
   min-height: 67.76vh;
   overflow-y: auto;
+  font-size: 150%;
   }
 
 .navbutton {

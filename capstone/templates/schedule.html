@@ -24,30 +24,26 @@
 {%block content%}
   <div class='container'>
     <div class="row pb-5">
-      <div class="col-md-10 col-lg-8 mx-lg-auto mx-md-auto">
-      <h1 class="pt-5 pb-2">Successfully Assigned Classes</h1>
+      <div class="col-md-16 col-lg-12 mx-lg-auto mx-md-auto">
+      <h1 class="pt-5 pb-2">Generated Schedule</h1>
         <table class="table">
           <tr>
+	    <th>Course Name</th>
             <th>Code</th>
             <th>Department Code</th>
             <th>Days</th>
 	    <th>Length</th>
             <th>Start Time</th>
-            <th>Disciplines</th>
-	    <th>Periods</th>
-	    <th>Course Name</th>
 	    <th>Instructor</th>
 	    <th>Valid?</th>
           </tr>
           {%for output_schedule in outputSchedule%}
+            <td>{{output_schedule.Name}}</td>
             <td>{{output_schedule.Code}}</td>
             <td>{{output_schedule.DepartmentCode}}</td>
             <td>{{output_schedule.Day}}</td>
-            <td>{{output_schedule.Length}}</td>
+            <td>{{output_schedule.Length}} minutes</td>
             <td>{{output_schedule.StartTime}}</td>
-            <td>{{output_schedule.Disciplines}}</td>
-            <td>{{output_schedule.Periods}}</td>
-            <td>{{output_schedule.Name}}</td>
             <td>{{output_schedule.instructor}}</td>
             <td>{{output_schedule.valid}}</td>
           </tr>

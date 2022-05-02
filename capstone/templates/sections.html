@@ -22,16 +22,35 @@
 {%endblock %}
 
 {%block content%}
-{%for sections in courseList%}
-   <h1>{{sections.Code}}</h1>
-   <p> {{sections.DepartmentCode}}</p>
-   <p> {{sections.Day}}</p>
-   <p> {{sections.Length}}</p>
-   <p> {{sections.StartTime}}</p>
-   <p> {{sections.Disciplines}}</p>
-   <p> {{sections.Name}}</p>
-{%endfor%}
-{%endblock%} 
+  <div class='container'>
+    <div class="row pb-5">
+      <div class="col-md-16 col-lg-12 mx-lg-auto mx-md-auto">
+      <h1 class="pt-5 pb-2">Sections</h1>
+        <table class="table">
+          <tr>
+	    <th>Course Name</th>
+            <th>Code</th>
+            <th>Department Code</th>
+            <th>Day</th>
+            <th>Length</th>
+            <th>Start Time</th>
+            <th>Disciplines</th>
+          </tr>
+          {%for sections in courseList%}
+	    <td>{{sections.Name}}</td>
+            <td>{{sections.Code}}</td>
+  	    <td>{{sections.DepartmentCode}}</td>
+	    <td>{{sections.Day}}</td>
+ 	    <td>{{sections.Length}} minutes</td>
+  	    <td>{{sections.StartTime}}</td>
+   	    <td>{{sections.Disciplines}}</td>
+          </tr>
+          {%endfor%}
+        </table>
+      </div>
+    </div>
+  </div>  
+{%endblock%}
 
 {%block graybottom%}
 {%endblock%}

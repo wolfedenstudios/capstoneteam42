@@ -95,6 +95,7 @@ main {
   min-height: 65.76vh;
   overflow-y: auto;
   width: 100%;
+  font-size: 200%;
   }
 
 .container{
