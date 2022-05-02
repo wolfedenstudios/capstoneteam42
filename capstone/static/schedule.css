@@ -72,10 +72,13 @@ header h1 {
   display: flex;
   justify-content: space-between;
   width: 100%;
+  min-height: 8vh;
 }
 
 .gray-bottom{
   display: flex;
+  justify-content: center;
+  width: 100%;
 }
 
 .gray-bar {
@@ -83,19 +86,20 @@ header h1 {
   display: flex;
   background-color: #d1d1d1;
   color: #060606;
-  min-height: 5vh;
   width: 100%;
   margin-top: auto;
 }
 
 main {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 70vh;
+  min-height: 65.76vh;
   overflow-y: auto;
+  width: 100%;
   }
+
+.container{
+  width: 100%;
+}
 
 .navbutton {
   display: inline-block;
