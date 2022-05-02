@@ -6,34 +6,86 @@
 
 html {
   height: 100vh;
-  /* base 10px to rem converted */
   font-size: 62.5%;
   font-family: serif;
 }
 
-body {
-  width: 100%;
+body{
   min-height: 100vh;
+  width: 100%;
 }
+
 
 header {
   text-align: center;
   background-color: #4f0d1b;
   color: #ffffff;
   font-size: 1.5rem;
+  min-height: 15vh;
+}
+
+.logout{
+  display: inline-block;
+  border-radius: 4px;
+  margin-top: 10px;
+  margin-right: 20px;
+  top: 0;
+  right: 0;
+  position: absolute;
+  padding: 5px;
+  transition: all 0.5s;
+  cursor: pointer;
+  min-height: 2vh;
+  min-width: 4vh;
+  }
+  
+.logout span{
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+
+.logout span:after {
+  content: '\00bb';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
+}
+
+.logout:hover span {
+  padding-right: 10px;
+}
+
+.logout:hover span:after {
+  opacity: 1;
+  right: 0;
 }
 
 header h1 {
   padding: 1em;
 }
 
+.gray-top{
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.gray-bottom{
+  display: flex;
+}
+
 .gray-bar {
   padding: 1em;
   display: flex;
-  justify-content: center;
-  background: #d1d1d1;
-  color: #d1d1d1;
+  background-color: #d1d1d1;
   color: #060606;
+  min-height: 5vh;
+  width: 100%;
+  margin-top: auto;
 }
 
 main {
@@ -41,30 +93,60 @@ main {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 67.76vh;
+  min-height: 70vh;
   overflow-y: auto;
+  }
+
+.navbutton {
+  display: inline-block;
+  border-radius: 4px;
+  background-color: #4f0d1b;
+  color: #FFFFFF;
+  text-align: center;
+  font-size: 14px;
+  padding: 10px;
+  transition: all 0.5s;
+  cursor: pointer;
+  margin: 5px;
+  width: auto;
 }
 
-button {
-  font-size: 1.8rem;
-  padding: 0.1em;
-  width: 10rem;
-  border: none;
-  background-color: white;
-  color: red;
+.navbutton span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+
+.navbutton span:after {
+  content: '\00bb';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
+}
+
+.navbutton:hover span {
+  padding-right: 25px;
+}
+
+.navbutton:hover span:after {
+  opacity: 1;
+  right: 0;
 }
 
 footer {
   background-color: gray;
   color: #ffffff;
   width: 100%;
-  position: fixed;
-  left: 0;
+  margin-top: auto;
   bottom: 0;
 }
 
 footer p {
-  padding: 3em 1em;
+  padding: 1em;
+  min-height: 5vh;
 }
 
 table {margin:4px}

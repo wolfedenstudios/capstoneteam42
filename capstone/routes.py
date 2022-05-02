@@ -70,7 +70,7 @@ def login():
                 if current_user.password == 'admin':
                     return redirect(url_for('reset'))
                 else:
-                    return redirect(url_for('home'))
+                    return redirect(url_for('hub'))
 
             else:
                 flash('Login unsuccessful, account not approved.', 'danger')
@@ -79,6 +79,13 @@ def login():
             flash('Login unsuccessful, please check email and password.', 'danger')
 
     return render_template('login.html', title='Log In', form=form)
+
+
+
+@app.route('/hub', methods=['GET', 'POST'])
+@login_required
+def hub():
+    return render_template('hub.html', title='Hub')
 
 
 
@@ -97,11 +104,11 @@ def addInstructor():
                 db.session.commit()
 
 
-        return render_template('addProf.html', title='requests', form=form)
+        return render_template('addProf.html', title='Add Professor', form=form)
 
     else:
         flash('You must be an admin to access this page!', 'danger')
-        return redirect(url_for('home'))
+        return redirect(url_for('hub'))
 
 
 @app.route('/add/course', methods=['GET', 'POST'])
@@ -125,7 +132,7 @@ def addCourse():
 
     else:
         flash('You must be an admin to access this page!', 'danger')
-        return redirect(url_for('home'))
+        return redirect(url_for('hub'))
 
 
 @app.route('/instructors')
@@ -135,7 +142,8 @@ def instructorList():
         instructorList = instructors.query.all()
         return render_template('instructors.html', title='Instructor List', instructorList=instructorList)
     else:
-        return redirect(url_for('home'))
+	flash('You must be an admin to access this page!', 'danger')
+        return redirect(url_for('hub'))
 
 
 @app.route('/sections')
@@ -143,9 +151,10 @@ def instructorList():
 def sectionsList():
     if (current_user.acc_type == 'ADMIN' or current_user.acc_type == 'ROOT'):
         courseList = sections.query.all()
-        return render_template('sections.html', title='section list', courseList=courseList)
+        return render_template('sections.html', title='Section list', courseList=courseList)
     else:
-        return redirect(url_for('home'))
+        flash('You must be an admin to access this page!', 'danger')
+        return redirect(url_for('hub'))
 
 #reset page
 @app.route('/reset', methods=['GET', 'POST'])
@@ -160,7 +169,7 @@ def reset():
                 db.session.commit()
             else:
                 flash('Old Password is incorrect or the new password does not match the confirmed password.', 'danger')
-        return redirect(url_for('home'))
+        return redirect(url_for('hub'))
     return render_template('reset.html', title = 'reset password', form=form)
 
 
