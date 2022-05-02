@@ -42,14 +42,14 @@ class resetForm(FlaskForm):
 class teacherForm(FlaskForm):
     lastName = StringField('Last Name', validators=[InputRequired()])
     maxLoad = IntegerField('Max Load', validators=[InputRequired(), NumberRange(min = 1, max = 4)])
-    disciplines = StringField('Disciplines', validators=[InputRequired()])
+    disciplines = StringField('Disciplines (NOTE: Please delimit disciplines with a period and leave no space between. Example: "Discipline1.Discipline2.Discipline3")', validators=[InputRequired()])
     submit = SubmitField('Add Instructor')
 
 
 class classForm(FlaskForm):
     Code = IntegerField('Course Number', validators=[InputRequired()])
     Name = StringField('Course Title', validators=[InputRequired()])
-    disciplines = StringField('Disciplines', validators=[InputRequired()])
+    disciplines = StringField('Disciplines (NOTE: Please delimit disciplines with a period and leave no space between. Example: "Discipline1.Discipline2.Discipline3")', validators=[InputRequired()])
     deptCode = StringField('Department Code', validators=[InputRequired()])
     submit = SubmitField('Add Section')
 
