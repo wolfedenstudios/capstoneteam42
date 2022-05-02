@@ -213,6 +213,9 @@ def approvePage():
 
         
         return render_template('requests.html', title='Approve or Deny Registration', accountList = requestedAcc)
+    
+    else:
+        return redirect(url_for('hub'))
 
 @app.route('/scheduler', methods=['GET', 'POST'])
 @login_required
@@ -221,7 +224,8 @@ def schedulerFunction():
     print(output_schedule.query.all())
     if request.method == 'POST':
         if request.form['submit_button'] == 'Generate Schedule':
-            print('running')
+            db.session.query(output_schedule).delete()
+            db.session.commit()
             main()
     return render_template('schedule.html', outputSchedule = outputSchedule)
 
