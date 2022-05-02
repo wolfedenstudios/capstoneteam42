@@ -141,10 +141,10 @@ def instructorList():
     if (current_user.acc_type == 'ADMIN' or current_user.acc_type == 'ROOT'):
         instructorList = instructors.query.all()
         return render_template('instructors.html', title='Instructor List', instructorList=instructorList)
+    
     else:
-	flash('You must be an admin to access this page!', 'danger')
+        flash('You must be an admin to access this page!', 'danger')
         return redirect(url_for('hub'))
-
 
 @app.route('/sections')
 @login_required
