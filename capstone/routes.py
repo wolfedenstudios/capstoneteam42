@@ -221,7 +221,6 @@ def approvePage():
 @login_required
 def schedulerFunction():
     outputSchedule = output_schedule.query.all()
-    print(output_schedule.query.all())
     if request.method == 'POST':
         if request.form['submit_button'] == 'Generate Schedule':
             db.session.query(output_schedule).delete()
@@ -240,8 +239,8 @@ def importFunction():
     db.session.commit() 
     db.session.query(sections).delete()
     db.session.commit()     
-    importData(0, 9, 'capstone/prof_data.dat')
-    importData(1, 29, 'capstone/course_data.dat')
+    importData(0, 9, 'capstone/prof_data-2.dat')
+    importData(1, 29, 'capstone/course_data-4.dat')
     return redirect(url_for('home'))
 
 

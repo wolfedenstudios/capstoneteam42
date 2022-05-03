@@ -49,8 +49,9 @@ class sections(db.Model):
     StartTime = db.Column(db.Integer, nullable = False, default = 0)
     Disciplines = db.Column(db.String(), nullable = False, default = 'x')
     Periods = db.Column(db.Integer, nullable = False, default = 0)
-    Name = db.Column(db.String(50), nullable = False)
+    Name = db.Column(db.String(), nullable = False)
     instructor = db.Column(db.String(20))
+    Time = db.Column(db.Integer, nullable = False, default = 0)
 
 class output_schedule(db.Model):
     Code = db.Column(db.Integer, unique = True, nullable = False, primary_key = True)

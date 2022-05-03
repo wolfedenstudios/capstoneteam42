@@ -212,6 +212,29 @@ Schedule = [{   #list of dictionarys call syntax is schedule[2][2200] that will 
   2200 : 0,  2230 : 0,
 }]   # Friday^
 
+def convertToPeriodsTime(time):
+  newTime = 0
+  if time % 100 == 0 or (time + 70) % 100 == 0:
+    newTime = time
+  else:
+    for j in range(5):
+      temp_time = time
+      #addes 5 to xx25 or xx55 and appends
+      if (time + 75) % 100 == 0:
+        time = time + 5
+        newTime = time
+        break
+      if (time + 45) % 100 == 0:
+        time = time + 45
+        newTime = time
+        break
+      #Lowers time to the next period interval
+      new_time = time - ((j + 1) * 5)
+      if new_time % 100 == 0 or (new_time + 70) % 100 == 0:
+        newTime = new_time
+        break
+
+  return newTime
 
 #  0 or 1 for prof or course accordingly, number of records being imported, path to file  #
 def importData(prof_or_course, record_num, file_path):
@@ -232,14 +255,15 @@ def importData(prof_or_course, record_num, file_path):
       dep_num = one_go[1]         #1
       day = one_go[2]             #2
       length = int(one_go[3])     #3
-      time = int(one_go[4])       #4
+      time = int(one_go[4])       #9
+      startTime = convertToPeriodsTime(time) #4
       disc = one_go[6]            #5
       periods = 0                 #6
       name = one_go[5]            #7
-      Course_temp = (code,dep_num,day,length,time,disc,periods,name)
+      Course_temp = (code,dep_num,day,length,startTime,disc,periods,name)
       AllCourses.append(Course_temp)
 
-      section = sections(Code=code, DepartmentCode=dep_num, Day=day, Length=length, StartTime=time, Disciplines=disc, Periods=periods, Name=name, instructor=None)
+      section = sections(Code=code, DepartmentCode=dep_num, Day=day, Length=length, StartTime=startTime, Disciplines=disc, Periods=periods, Name=name, instructor=None, Time = time)
       db.session.add(section)
       db.session.commit()
     # add data to instructor queue
@@ -750,58 +774,4 @@ def main():
   
   return
 
-  outputSchedules.clear()
-  AssignedCourses.clear()
-  UnassignedCourses.clear()
-  print('clearing instructors')
-  instructors_list.clear() 
-  instructorQueue.clear()
-  MaxLoadedInstructors.clear()
-  inst_schedule.clear()
-  tempList.clear()
-  rows.clear()
-  rows_dic.clear()
-  rows_dic_temp.clear()
-  All_Instructors.clear()
 
-  print(outputSchedules)
-  print(AssignedCourses)
-  print(UnassignedCourses)
-  for i in range(len(instructors_list)):
-     print(i, '-', instructors_list[i][0])
-
-  #db.session.query(instructors).delete()
-  #db.session.commit()                                             #clears instructors database
-  #loops through instructors and adds a row to the table for each
-  #for i in range(len(instructors_list)):
-    #print(instructors_list[i])
-    #dayStrings = convertScheduleToStrings(instructors_list[i][4])
-    #print(instructors_list[i][0])
-    #print(instructors_list[i][3])
-    #j = len(instructors_list[i][3])
-    #print('the length of instructors_list[i][3] is ', j)
-    #while j < 4:
-    #  print('appending list')
-    #  instructors_list[i][3].append((238001, 'CPSC', 'RF', 75, 1830, 'Networks.Programming Languages', 3, 'Algorithm'))
-    #  j+=1
-    #print(instructors_list[i][4])
-    #j = len(dayStrings)
-    #while j < 4:
-    #  dayStrings.append('000')
-    #  j+=1
-
-    #inst = instructors(LName=instructors_list[i][0],
-    # MaxLoad=instructors_list[i][1],
-    #  Disciplines=instructors_list[i][2],
-    #   Course_code_1=instructors_list[i][3][0][0],
-    #    Course_code_2=instructors_list[i][3][1][0],
-    #     Course_code_3=instructors_list[i][3][2][0],
-    #      Course_code_4=instructors_list[i][3][3][0],
-    #       Schedule_Day_1=dayStrings[0],
-    #        Schedule_Day_2=dayStrings[1],
-    #         Schedule_Day_3=dayStrings[2],
-    #          Schedule_Day_4=dayStrings[3],
-    #           Schedule_Day_5=dayStrings[4],
-    #            CurrentLoad=instructors_list[i][5])
-    #db.session.add(inst)
-    #db.session.commit()
