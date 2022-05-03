@@ -2,6 +2,7 @@ from capstone import db
 from capstone.models import sections, instructors, output_schedule
 import enum
 import random
+import copy
 MaxLoadedInstructors = []
 outputSchedules = [ ]
 instructorQueue = []
@@ -92,8 +93,6 @@ schedule = [{   #list of dictionarys call syntax is schedule[2][2200] that will 
   2200 : 0,  2230 : 0,
 }]   # Friday^
 
-
-#works as intended
 def convertToPeriodsTime(time):
   newTime = 0
   if time % 100 == 0 or (time + 70) % 100 == 0:
@@ -118,7 +117,6 @@ def convertToPeriodsTime(time):
 
   return newTime
 
-#Works as intended
 #  0 or 1 for prof or course accordingly, number of records being imported, path to file  #
 def importData(prof_or_course, record_num, file_path):
 
@@ -145,25 +143,27 @@ def importData(prof_or_course, record_num, file_path):
       name = one_go[5]            #7
       Course_temp = (code,dep_num,day,length,startTime,disc,periods,name)
       AllCourses.append(Course_temp)
+      print(Course_temp)
 
-      section = sections(Code=code, DepartmentCode=dep_num, Day=day, Length=length, StartTime=startTime, Disciplines=disc, Periods=periods, Name=name, instructor=None, Time = time)
-      db.session.add(section)
-      db.session.commit()
+      #section = sections(Code=code, DepartmentCode=dep_num, Day=day, Length=length, StartTime=startTime, Disciplines=disc, Periods=periods, Name=name, instructor=None, Time = time)
+      #db.session.add(section)
+      #db.session.commit()
     # add data to instructor queue
     elif prof_or_course == 0:
       lname = one_go[0]                 #0
       maxload = int(one_go[1])          #1
       disc = one_go[2]                  #2
       courses = []                      #3
-      inst_schedule = list(schedule)    #4
+      inst_schedule = copy.deepcopy(schedule)   #4
       currload = 0                      #5
-      prof_temp = (lname,maxload,disc,courses,schedule,currload)
+      prof_temp = (lname,maxload,disc,courses,copy.deepcopy(schedule),currload)
       instructorQueue.append(prof_temp)
+      print(prof_temp)
       
-      prof = instructors(LName=lname, MaxLoad=maxload, Disciplines=disc, Course_code_1=None, Course_code_2=None, Course_code_3=None, Course_code_4=None, Schedule_Day_1=None, Schedule_Day_2=None, Schedule_Day_3=None, Schedule_Day_4=None, Schedule_Day_5=None, CurrentLoad=currload)
-      print(prof.LName)
-      db.session.add(prof)
-      db.session.commit()     
+      #prof = instructors(LName=lname, MaxLoad=maxload, Disciplines=disc, Course_code_1=None, Course_code_2=None, Course_code_3=None, Course_code_4=None, Schedule_Day_1=None, Schedule_Day_2=None, Schedule_Day_3=None, Schedule_Day_4=None, Schedule_Day_5=None, CurrentLoad=currload)
+      #print(prof.LName)
+      #db.session.add(prof)
+      #db.session.commit()     
 
     else:
       print("incorrect data value: Error Code 101")
@@ -353,19 +353,20 @@ def reassignCourse(instructor,course,courseQueue,courseIndice):
   #assign new course
   #assign old courses
   #add the remaining course back to unassigned courses
-
-  if instructor[5] == 2:
+  if len(instructor[3]) == 1:
+    print("instructors course list before:", instructor[3][0][7])
+  elif len(instructor[3]) == 2:
     print("instructors course list before:", instructor[3][0][7],"|",instructor[3][1][7])
-  elif instructor[5] == 3:
+  elif len(instructor[3]) == 3:
     print("instructors course list before:", instructor[3][0][7],"|",instructor[3][1][7],"|",instructor[3][2][7])
-  elif instructor[5] == 4:
+  elif len(instructor[3]) == 4:
     print("instructors course list before:", instructor[3][0][7],"|",instructor[3][1][7],"|",instructor[3][2][7],"|",instructor[3][3][7])
 
 
   new_instructor = None
   instCourses = list(instructor[3])                                             #copy course list
   instructor[3].clear()                                                         #empty course list
-  new_instructor = changeTupleValue(instructor,schedule,4)                      #empty schedule
+  new_instructor = changeTupleValue(instructor,copy.deepcopy(schedule),4)                      #empty schedule
   new_instructor = schedInstSched(new_instructor,course)                        #assign new course
   #print("schedule:       ",instructor[4])
   indice = 0
@@ -387,18 +388,20 @@ def reassignCourse(instructor,course,courseQueue,courseIndice):
   del courseQueue[courseIndice]
   #remove inst from old course
   if new_instructor != None:
-    if new_instructor[5] == 2:
-      print("instructors course list after:", new_instructor[3][0][7],"|",new_instructor[3][1][7])
-    elif new_instructor[5] == 3:
-      print("instructors course list after:", new_instructor[3][0][7],"|",new_instructor[3][1][7],"|",new_instructor[3][2][7])
-    elif new_instructor[5] == 4:
-      print("instructors course list after:", new_instructor[3][0][7],"|",new_instructor[3][1][7],"|",new_instructor[3][2][7],"|",new_instructor[3][3][7])
+    if len(instructor[3]) == 1:
+      print("instructors course list after:", instructor[3][0][7])
+    elif len(instructor[3])== 2:
+      print("instructors course list after:", instructor[3][0][7],"|",instructor[3][1][7])
+    elif len(instructor[3]) == 3:
+      print("instructors course list after:", instructor[3][0][7],"|",instructor[3][1][7],"|",instructor[3][2][7])
+    elif len(instructor[3]) == 4:
+      print("instructors course list after:", instructor[3][0][7],"|",instructor[3][1][7],"|",instructor[3][2][7],"|",instructor[3][3][7])
 
   deleter = []
   for i in range(len(instCourses)):
     for j in range(len(outputSchedules)):
       if outputSchedules[j][0] == instCourses[i][0]:
-        del outputSchedules[i] #Changed this to j
+        del outputSchedules[j] #Changed this to j
         break
 
   #add inst to new course
@@ -426,6 +429,11 @@ def findNextInstructor(MaxMatches,course,courseQueue,courseindice):
   worstMatch = None
 
   for k, tuple in enumerate(MaxMatches):
+
+    if MaxMatches[k][1] > 0:
+      worstMatches.append(MaxMatches[k][0])
+    
+    '''
     if k == 0:
       worstMatch = MaxMatches[k]
       worstMatches.append(worstMatch)
@@ -437,13 +445,25 @@ def findNextInstructor(MaxMatches,course,courseQueue,courseindice):
       worstMatches.append(worstMatch)
     else:
       print("in max Matches else")
+      '''
+
+  least_overlappers = []
   for i, tuple in enumerate(worstMatches):
     if i == 0:
-      worstMatch = worstMatches[i][0]
-      currentMinOverlap = findMinOverlap(worstMatches[i][0],course)
-    elif currentMinOverlap < findMinOverlap(worstMatches[i][0],course):
-      worstMatch = worstMatches[i][0]
-  newInstAndCourse = reassignCourse(worstMatch,course,courseQueue,courseindice)
+      worstMatch = worstMatches[i]
+      currentMinOverlap = findMinOverlap(worstMatches[i],course)
+      least_overlappers.append(worstMatches[i])
+    elif currentMinOverlap == findMinOverlap(worstMatches[i],course):
+      least_overlappers.append(worstMatches[i])
+    elif currentMinOverlap < findMinOverlap(worstMatches[i],course):
+      least_overlappers.clear()
+      least_overlappers.append(worstMatches[i])
+      worstMatch = worstMatches[i]
+
+  real_worst_match = least_overlappers[getRandomNum(0,len(least_overlappers))]
+
+  print("real worst match",real_worst_match)
+  newInstAndCourse = reassignCourse(real_worst_match,course,courseQueue,courseindice)
   return newInstAndCourse
 
 #####     schduling algorithm     #####
@@ -454,7 +474,7 @@ def Scheduler(UnassignedCourseQueue,instructorQueue):
   loopNum = len(UnassignedCourseQueue)
   courseindice = 0
 
-  i = 0
+  looper = 0
   while len(UnassignedCourseQueue) != 0:
   #for i in range(loopNum):
     UnassignedCourseQueue[courseindice] = setPeriods(UnassignedCourseQueue[courseindice])
@@ -463,27 +483,41 @@ def Scheduler(UnassignedCourseQueue,instructorQueue):
     currentBestMatch = None
     BestMatches = []
 
-    print(UnassignedCourseQueue[courseindice][7], "| loop #", i)
+    
+    print("")
+   # print(UnassignedCourseQueue[courseindice])
+    print(UnassignedCourseQueue[courseindice][7], "| loop #", looper)
     for j, tuple in enumerate(instructorQueue):
       matchRate = findMatchRate(instructorQueue[j][2],UnassignedCourseQueue[courseindice][5])
 
-      if matchRate > 0 and BestMatches == None and CheckInstSched(instructorQueue[j],UnassignedCourseQueue[courseindice]):
+      print("match rate between:",matchRate, "-", instructorQueue[j][0])
+      print("inst schedule", instructorQueue[j][4])
+      if matchRate > 0 and BestMatches == [] and CheckInstSched(instructorQueue[j],UnassignedCourseQueue[courseindice]):
         currentBestMatchRate = matchRate
         BestMatches.append([instructorQueue[j], j])
-      elif matchRate == currentBestMatchRate and CheckInstSched(instructorQueue[j],UnassignedCourseQueue[courseindice]):
+      elif matchRate == currentBestMatchRate and currentBestMatchRate != 0 and CheckInstSched(instructorQueue[j],UnassignedCourseQueue[courseindice]):
         BestMatches.append([instructorQueue[j], j])
       elif matchRate > currentBestMatchRate and CheckInstSched(instructorQueue[j],UnassignedCourseQueue[courseindice]):
-        currentBestMatch = matchRate
+        currentBestMatchRate = matchRate
         BestMatches.clear()
         BestMatches.append([instructorQueue[j], j])
+    
+    for l in range(len(BestMatches)):
+      print("best matches:", l, BestMatches[l][0][0])
 
+    if len(BestMatches) == 0:
+      all_instructors = instructorQueue + MaxLoadedInstructors
+      all_Matches = newMatches(all_instructors, UnassignedCourseQueue[courseindice])
+      conflicting_matches = []
+      for k in range(len(all_Matches)):
+        if not CheckInstSched(all_Matches[k][0],UnassignedCourseQueue[courseindice]):
+          conflicting_matches.append(all_Matches[k])
 
-    maxMatches = newMatches(MaxLoadedInstructors,UnassignedCourseQueue[courseindice])
-    if len(BestMatches) == 0 and len(MaxLoadedInstructors) > 0 and len(maxMatches) != 0:
+    if len(BestMatches) == 0 and len(conflicting_matches):
       print("------------------------------------- Entering worst Match code ---------------------------------------------------")
       #print("ERROR: No suitable instructors for", UnassignedCourseQueue[7])
       #courseindice = courseindice + 1
-      newInstAndCourse = findNextInstructor(maxMatches,UnassignedCourseQueue[courseindice],UnassignedCourseQueue,courseindice)
+      newInstAndCourse = findNextInstructor(conflicting_matches,UnassignedCourseQueue[courseindice],UnassignedCourseQueue,courseindice)
       UnassignedCourseQueue = newInstAndCourse[1]
       BestMatches.append(newInstAndCourse[0])
       currentBestMatch = BestMatches[0]
@@ -529,19 +563,32 @@ def Scheduler(UnassignedCourseQueue,instructorQueue):
 
     if courseindice == len(UnassignedCourseQueue):
       courseindice = 0
-      loopBreaker = loopBreaker + 1
-      if loopBreaker == 3:
-        print("\n\nERROR: Caught infite loop. Some courses could not be assigned. Loop broke. \n\n")
-        break
 
+
+
+
+    print("")
+    if looper == 1000:
+      print("\n\nERROR: Caught infite loop. Some courses could not be assigned. Loop broke. \n\n")
+      break
+    else:
+      looper = looper + 1
+
+  #replace instance of instructors with most recent instance in courses
   all_instructors_post = instructorQueue + MaxLoadedInstructors
+  #for j in range(len(all_instructors_post)):
+  #  for i in range(len(outputSchedules)):
+  #    if all_instructors_post[j][0] == outputSchedules[i][8][0]:
+  #      print('replacing data with ',outputSchedules[i][8][0])
+  #      outputSchedules[i] = changeTupleValue(outputSchedules[i],all_instructors_post[j],8)
+  #      break
 
   return [UnassignedCourseQueue,outputSchedules,all_instructors_post]
 
 def main():
 
   print('running scheduling algorithm')
-
+  
   db.session.query(output_schedule).delete()
   db.session.commit()
 
@@ -607,6 +654,11 @@ def main():
     section = (code,depcode,day,length,time,disciplines,periods,name)
     All_Courses.append(section)
 
+  All_Courses = AllCourses
+  All_Instructors = instructorQueue
+  print("")
+  print(All_Courses)
+  print(All_Instructors)
   #Runs the scheduling algorithm and returns the two lists of assigned and Unassigned Courses
   tempList = Scheduler(All_Courses,All_Instructors)
   UnassignedCourses = tempList[0]
@@ -621,11 +673,11 @@ def main():
   for i in range(len(UnassignedCourses)):
     UnassignedCourses[i] = UnassignedCourses[i] + ('None',)
     UnassignedCourses[i] = UnassignedCourses[i] + (False,)
-  outputSchedules = AssignedCourses + UnassignedCourses
+  outputSchedules = AssignedCourses# + UnassignedCourses
 
   for i in range(len(outputSchedules)):
     print(i,'-', outputSchedules[i][0])
-
+  
   print(len(outputSchedules))
   db.session.query(output_schedule).delete()
   db.session.commit()                                         #clears outputSchedule database
@@ -639,9 +691,6 @@ def main():
       print(outputSchedules[i][8][0])
     else:
       print('course already in database')
-  
+
+
   return
-
-  
-
-
