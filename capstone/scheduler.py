@@ -7,44 +7,6 @@ outputSchedules = [ ]
 instructorQueue = []
 AllCourses = []
 
-#################ENUMS###############################################
-
-class ACCESSLEVEL(enum.Enum):
-    ROOT = 0
-    ADMIN = 1
-    PUBLIC_USER = 2
-
-class DAY(enum.Enum):
-    TR = 0
-    MW = 1
-    MWF = 2
-    TRF = 3
-    MF = 4
-    WF = 5
-    TF = 6
-    RF = 7
-    M = 8
-    T = 9
-    W = 10
-    R = 11
-    F = 12
-
-class DISCIPLINES(enum.Enum):
-    ProgrammingC = 0
-    ProgrammingPython = 1
-    GameDevelopment = 2
-    DataStructuresandAlgorithms = 3
-    ComputerOrganization = 4
-    OperatingSystems = 5
-    ProgrammingLanguages = 6
-    Cybersecurity = 7
-    MobileApplications = 8
-    ArtificialIntelligence = 9
-    Networks = 10
-    TheoryOfComputation = 11
-    ParallelandDistributedSystems = 12
-    VirtualReality = 13
-
 
 #################LISTS###############################################
 
@@ -130,88 +92,8 @@ schedule = [{   #list of dictionarys call syntax is schedule[2][2200] that will 
   2200 : 0,  2230 : 0,
 }]   # Friday^
 
-Schedule = [{   #list of dictionarys call syntax is schedule[2][2200] that will call Tuesday at 10pm
-   800 : 0,   830 : 0,
-   900 : 0,   930 : 0,
-  1000 : 0,  1030 : 0,
-  1100 : 0,  1130 : 0,
-  1200 : 0,  1230 : 0,
-  1300 : 0,  1330 : 0,
-  1400 : 0,  1430 : 0,
-  1500 : 0,  1530 : 0,
-  1600 : 0,  1630 : 0,
-  1700 : 0,  1730 : 0,
-  1800 : 0,  1830 : 0,
-  1900 : 0,  1930 : 0,
-  2000 : 0,  2030 : 0,
-  2100 : 0,  2130 : 0,
-  2200 : 0,  2230 : 0,
-},{     # Monday^
-   800 : 0,   830 : 0,
-   900 : 0,   930 : 0,
-  1000 : 0,  1030 : 0,
-  1100 : 0,  1130 : 0,
-  1200 : 0,  1230 : 0,
-  1300 : 0,  1330 : 0,
-  1400 : 0,  1430 : 0,
-  1500 : 0,  1530 : 0,
-  1600 : 0,  1630 : 0,
-  1700 : 0,  1730 : 0,
-  1800 : 0,  1830 : 0,
-  1900 : 0,  1930 : 0,
-  2000 : 0,  2030 : 0,
-  2100 : 0,  2130 : 0,
-  2200 : 0,  2230 : 0,
-},{     # Tusday^
-   800 : 0,   830 : 0,
-   900 : 0,   930 : 0,
-  1000 : 0,  1030 : 0,
-  1100 : 0,  1130 : 0,
-  1200 : 0,  1230 : 0,
-  1300 : 0,  1330 : 0,
-  1400 : 0,  1430 : 0,
-  1500 : 0,  1530 : 0,
-  1600 : 0,  1630 : 0,
-  1700 : 0,  1730 : 0,
-  1800 : 0,  1830 : 0,
-  1900 : 0,  1930 : 0,
-  2000 : 0,  2030 : 0,
-  2100 : 0,  2130 : 0,
-  2200 : 0,  2230 : 0,
-},{    # Wednesday^
-   800 : 0,   830 : 0,
-   900 : 0,   930 : 0,
-  1000 : 0,  1030 : 0,
-  1100 : 0,  1130 : 0,
-  1200 : 0,  1230 : 0,
-  1300 : 0,  1330 : 0,
-  1400 : 0,  1430 : 0,
-  1500 : 0,  1530 : 0,
-  1600 : 0,  1630 : 0,
-  1700 : 0,  1730 : 0,
-  1800 : 0,  1830 : 0,
-  1900 : 0,  1930 : 0,
-  2000 : 0,  2030 : 0,
-  2100 : 0,  2130 : 0,
-  2200 : 0,  2230 : 0,
-},{     # Thursday^
-   800 : 0,   830 : 0,
-   900 : 0,   930 : 0,
-  1000 : 0,  1030 : 0,
-  1100 : 0,  1130 : 0,
-  1200 : 0,  1230 : 0,
-  1300 : 0,  1330 : 0,
-  1400 : 0,  1430 : 0,
-  1500 : 0,  1530 : 0,
-  1600 : 0,  1630 : 0,
-  1700 : 0,  1730 : 0,
-  1800 : 0,  1830 : 0,
-  1900 : 0,  1930 : 0,
-  2000 : 0,  2030 : 0,
-  2100 : 0,  2130 : 0,
-  2200 : 0,  2230 : 0,
-}]   # Friday^
 
+#works as intended
 def convertToPeriodsTime(time):
   newTime = 0
   if time % 100 == 0 or (time + 70) % 100 == 0:
@@ -236,6 +118,7 @@ def convertToPeriodsTime(time):
 
   return newTime
 
+#Works as intended
 #  0 or 1 for prof or course accordingly, number of records being imported, path to file  #
 def importData(prof_or_course, record_num, file_path):
 
@@ -482,7 +365,7 @@ def reassignCourse(instructor,course,courseQueue,courseIndice):
   new_instructor = None
   instCourses = list(instructor[3])                                             #copy course list
   instructor[3].clear()                                                         #empty course list
-  new_instructor = changeTupleValue(instructor,Schedule,4)                      #empty schedule
+  new_instructor = changeTupleValue(instructor,schedule,4)                      #empty schedule
   new_instructor = schedInstSched(new_instructor,course)                        #assign new course
   #print("schedule:       ",instructor[4])
   indice = 0
@@ -515,7 +398,7 @@ def reassignCourse(instructor,course,courseQueue,courseIndice):
   for i in range(len(instCourses)):
     for j in range(len(outputSchedules)):
       if outputSchedules[j][0] == instCourses[i][0]:
-        del outputSchedules[j] #Changed this to j
+        del outputSchedules[i] #Changed this to j
         break
 
   #add inst to new course
@@ -580,17 +463,17 @@ def Scheduler(UnassignedCourseQueue,instructorQueue):
     currentBestMatch = None
     BestMatches = []
 
-    print(UnassignedCourseQueue[courseindice])
     print(UnassignedCourseQueue[courseindice][7], "| loop #", i)
     for j, tuple in enumerate(instructorQueue):
       matchRate = findMatchRate(instructorQueue[j][2],UnassignedCourseQueue[courseindice][5])
 
-      if matchRate > 0 and currentBestMatch == None and CheckInstSched(instructorQueue[j],UnassignedCourseQueue[courseindice]):
+      if matchRate > 0 and BestMatches == None and CheckInstSched(instructorQueue[j],UnassignedCourseQueue[courseindice]):
         currentBestMatchRate = matchRate
         BestMatches.append([instructorQueue[j], j])
       elif matchRate == currentBestMatchRate and CheckInstSched(instructorQueue[j],UnassignedCourseQueue[courseindice]):
         BestMatches.append([instructorQueue[j], j])
       elif matchRate > currentBestMatchRate and CheckInstSched(instructorQueue[j],UnassignedCourseQueue[courseindice]):
+        currentBestMatch = matchRate
         BestMatches.clear()
         BestMatches.append([instructorQueue[j], j])
 
@@ -651,22 +534,7 @@ def Scheduler(UnassignedCourseQueue,instructorQueue):
         print("\n\nERROR: Caught infite loop. Some courses could not be assigned. Loop broke. \n\n")
         break
 
-
-    #print("")
-    #if i == 100000000:
-    #  print("\n\nERROR: Caught infite loop. Some courses could not be assigned. Loop broke. \n\n")
-    #  break
-    #else:
-    #  i = i + 1
-
-  #replace instance of instructors with most recent instance in courses
   all_instructors_post = instructorQueue + MaxLoadedInstructors
-  #for j in range(len(all_instructors_post)):
-  #  for i in range(len(outputSchedules)):
-  #    if all_instructors_post[j][0] == outputSchedules[i][8][0]:
-  #      print('replacing data with ',outputSchedules[i][8][0])
-  #      outputSchedules[i] = changeTupleValue(outputSchedules[i],all_instructors_post[j],8)
-  #      break
 
   return [UnassignedCourseQueue,outputSchedules,all_instructors_post]
 
@@ -773,5 +641,7 @@ def main():
       print('course already in database')
   
   return
+
+  
 
 
