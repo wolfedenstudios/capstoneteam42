@@ -51,6 +51,8 @@ class classForm(FlaskForm):
     Name = StringField('Course Title', validators=[InputRequired()])
     disciplines = StringField('Disciplines (NOTE: Please delimit disciplines with a period and leave no space between. Example: "Discipline1.Discipline2.Discipline3")', validators=[InputRequired()])
     deptCode = StringField('Department Code', validators=[InputRequired()])
+    meetingDay = StringField('Meeting Days (M, T, W, R, F ex MWF or TR)', validators=[InputRequired()])
+    meetTime = IntegerField('Meeting time (24 hour time with no :)', validators=[InputRequired()])
     submit = SubmitField('Add Section')
 
 
