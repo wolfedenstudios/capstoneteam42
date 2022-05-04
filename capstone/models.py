@@ -51,7 +51,7 @@ class sections(db.Model):
     Periods = db.Column(db.Integer, nullable = False, default = 0)
     Name = db.Column(db.String(), nullable = False)
     instructor = db.Column(db.String(20))
-    Time = db.Column(db.Integer, nullable = False, default = 0)
+    time = db.Column(db.Integer, nullable = False, default = 0)
 
 class output_schedule(db.Model):
     Code = db.Column(db.Integer, unique = True, nullable = False, primary_key = True)
