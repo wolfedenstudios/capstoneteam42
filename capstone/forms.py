@@ -1,5 +1,6 @@
 ﻿from flask import Flask
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileField, FileRequired
 from wtforms import StringField, IntegerField, PasswordField, SubmitField
 from wtforms.validators import InputRequired, Length, Email, EqualTo, ValidationError, NumberRange
 from capstone import db
@@ -55,6 +56,12 @@ class classForm(FlaskForm):
     meetTime = IntegerField('Start time (24 hour time with no :)', validators=[InputRequired()])
     meetLegnth = IntegerField('Section Meeting Length', validators=[InputRequired()])
     submit = SubmitField('Add Section')
+
+class importForm(FlaskForm):
+    uploadFile = FileField('.dat file', validators=[FileRequired()])
+    classOrProf = IntegerField('Class = 1, instructor = 0', validators=[InputRequired()])
+    numEntries = IntegerField('Number of entries in file', validators=[InputRequired()])
+    submit = SubmitField('Upload File')
 
 
 

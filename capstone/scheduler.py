@@ -153,9 +153,9 @@ def importData(prof_or_course, record_num, file_path):
       AllCourses.append(Course_temp)
       print(Course_temp)
 
-      #section = sections(Code=code, DepartmentCode=dep_num, Day=day, Length=length, StartTime=startTime, Disciplines=disc, Periods=periods, Name=name, instructor=None, Time = time)
-      #db.session.add(section)
-      #db.session.commit()
+      section = sections(Code=code, DepartmentCode=dep_num, Day=day, Length=length, StartTime=startTime, Disciplines=disc, Periods=periods, Name=name, instructor=None, Time = time)
+      db.session.add(section)
+      db.session.commit()
     # add data to instructor queue
     elif prof_or_course == 0:
       lname = one_go[0]                 #0
@@ -168,10 +168,10 @@ def importData(prof_or_course, record_num, file_path):
       instructorQueue.append(prof_temp)
       print(prof_temp)
       
-      #prof = instructors(LName=lname, MaxLoad=maxload, Disciplines=disc, Course_code_1=None, Course_code_2=None, Course_code_3=None, Course_code_4=None, Schedule_Day_1=None, Schedule_Day_2=None, Schedule_Day_3=None, Schedule_Day_4=None, Schedule_Day_5=None, CurrentLoad=currload)
-      #print(prof.LName)
-      #db.session.add(prof)
-      #db.session.commit()     
+      prof = instructors(LName=lname, MaxLoad=maxload, Disciplines=disc, Course_code_1=None, Course_code_2=None, Course_code_3=None, Course_code_4=None, Schedule_Day_1=None, Schedule_Day_2=None, Schedule_Day_3=None, Schedule_Day_4=None, Schedule_Day_5=None, CurrentLoad=currload)
+      print(prof.LName)
+      db.session.add(prof)
+      db.session.commit()     
 
     else:
       print("incorrect data value: Error Code 101")

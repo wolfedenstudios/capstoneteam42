@@ -1,0 +1,51 @@
+{% extends "HTMLTemplate.html" %}
+
+{%block meta%}
+  <title>UALR Schedule Generator - Import Data</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="The page to add professors to the database for the UALR Schedule Generator">
+  <link href="/static/addProf.css" rel="stylesheet" type="text/css">
+{%endblock%}
+
+{%block logbutton%}
+  <button class="logout" onclick="window.location.href = 'http://ec2-3-92-209-242.compute-1.amazonaws.com/logout';"><span>Log Out </span></button>
+{%endblock%}
+
+{%block graytop %}
+  <button class="navbutton" onclick="window.location.href = 'http://ec2-3-92-209-242.compute-1.amazonaws.com/hub';"><span>Back to Hub </span></button>
+  <button class="navbutton" onclick="window.location.href = 'http://ec2-3-92-209-242.compute-1.amazonaws.com/approve';"><span>Approve Users </span></button>
+  <button class="navbutton" onclick="window.location.href = 'http://ec2-3-92-209-242.compute-1.amazonaws.com/instructors';"><span>List of Instructors </span></button>
+  <button class="navbutton" onclick="window.location.href = 'http://ec2-3-92-209-242.compute-1.amazonaws.com/add/course';"><span>Add Course </span></button>
+  <button class="navbutton" onclick="window.location.href = 'http://ec2-3-92-209-242.compute-1.amazonaws.com/sections';"><span>List of Courses </span></button>
+  <button class="navbutton" onclick="window.location.href = 'http://ec2-3-92-209-242.compute-1.amazonaws.com/scheduler';"><span>Generate a Schedule </span></button>
+{%endblock%}
+
+{%block content%}
+<div class="content-section">
+    <form method="POST" enctype="multipart/form-data" action="">
+        {{ form.hidden_tag() }}
+        <fieldset class="form-group">
+            <legend class="border-bottom mb-4">Add Instructor</legend>
+            <div class="form-group">
+                {{ form.uploadFile.label(class="form-control-label")  }}
+                {{ form.uploadFile(class="form-control form-control-lg") }}
+            </div>
+            <div class="form-group">
+                {{ form.classOrProf.label(class="form-control-label")  }}
+                {{ form.classOrProf(class="form-control form-control-lg") }}
+       	    </div>
+               <div class="form-group">
+                {{ form.numEntries.label(class="form-control-label")  }}
+                {{ form.numEntries(class="form-control form-control-lg") }}
+       	    </div>
+	 </fieldset>
+        <div class="form-group">
+            {{ form.submit(class="btn btn-outline-info") }}
+        </div>
+    </form>
+</div>  
+{%endblock%}
+
+{%block graybottom%}
+{%endblock%}

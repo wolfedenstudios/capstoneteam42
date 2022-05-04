@@ -1,13 +1,17 @@
+from fileinput import filename
+import os
+from pydoc import importfile
 from sre_constants import SUCCESS
 from flask import render_template, session, url_for, flash, redirect, request
 from sqlalchemy import null
 from capstone import app
 from flask_mail import Message
-from capstone.forms import RegistrationForm, LoginForm, classForm, resetForm, teacherForm
+from capstone.forms import RegistrationForm, LoginForm, classForm, importForm, resetForm, teacherForm
 from capstone import db, get_db_connection, mail
 from capstone.models import accounts, instructors, sections, output_schedule
 from flask_login import current_user, login_required, login_user, logout_user
 from capstone.scheduler import importData, main
+from werkzeug.utils import secure_filename
 
 @app.route('/')
 def home():
@@ -233,15 +237,27 @@ def schedulerFunction():
 
 
 
-@app.route('/import')
+@app.route('/import', methods=['GET', 'POST'])
 def importFunction():
-    db.session.query(instructors).delete()
-    db.session.commit() 
-    db.session.query(sections).delete()
-    db.session.commit()     
-    importData(0, 9, 'capstone/prof_data-2.dat')
-    importData(1, 29, 'capstone/course_data-4.dat')
-    return redirect(url_for('home'))
+    form=importForm()
+    if form.validate_on_submit():
+        print('valid import upload')
+        classOrProf = form.classOrProf.data
+        numEntries = form.numEntries.data
+        importFile = form.uploadFile.data
+        fileName = secure_filename(importFile.filename)
+        importFile.save(os.path.join(os.getcwd(), 'uploads', fileName))       
+        if classOrProf == 0:
+            db.session.query(instructors).delete()
+            db.session.commit()
+            importData(classOrProf, numEntries, importFile)
+
+        elif classOrProf == 1:
+            db.session.query(sections).delete()
+            db.session.commit()
+            importData(classOrProf, numEntries, importFile)
+
+    return render_template('import.html', form = form)
 
 
 
