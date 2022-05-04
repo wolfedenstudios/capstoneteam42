@@ -109,6 +109,14 @@ def convertToPeriodsTime(time):
         time = time + 45
         newTime = time
         break
+      if (time + 50) % 100 == 0:
+        time = time + 50
+        newTime = time
+        break
+      if (time + 80) % 100 == 0:
+        time = time + 10
+        newTime = time
+        break
       #Lowers time to the next period interval
       new_time = time - ((j + 1) * 5)
       if new_time % 100 == 0 or (new_time + 70) % 100 == 0:
