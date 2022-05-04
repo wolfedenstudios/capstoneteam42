@@ -239,26 +239,12 @@ def schedulerFunction():
 
 @app.route('/import', methods=['GET', 'POST'])
 def importFunction():
-    form=importForm()
-    if form.validate_on_submit():
-        print('valid import upload')
-        classOrProf = form.classOrProf.data
-        numEntries = form.numEntries.data
-        importFile = form.uploadFile.data
-        fileName = secure_filename(importFile.filename)
-        importFile.save(os.path.join(os.getcwd(), 'uploads', fileName))       
-        if classOrProf == 0:
-            db.session.query(instructors).delete()
-            db.session.commit()
-            importData(classOrProf, numEntries, importFile)
-
-        elif classOrProf == 1:
-            db.session.query(sections).delete()
-            db.session.commit()
-            importData(classOrProf, numEntries, importFile)
-
-    return render_template('import.html', form = form)
-
+    db.session.query(instructors).delete()
+    db.session.query(sections).delete()
+    db.session.commit()
+    importData(0,9,os.path.abspath('capstone/static/prof_data-2.dat'))
+    importData(1, 29, os.path.abspath('capstone/static/course_data-4.dat'))
+    return redirect(url_for('hub'))
 
 
 
