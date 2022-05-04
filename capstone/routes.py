@@ -117,7 +117,7 @@ def addInstructor():
         return redirect(url_for('hub'))
 
 
-@app.route('/add/course', methods=['GET', 'POST'])
+@app.route('/add/section', methods=['GET', 'POST'])
 @login_required
 def addCourse():
     if (current_user.acc_type == 'ADMIN' or current_user.acc_type == 'ROOT'):
@@ -128,8 +128,11 @@ def addCourse():
             Name = form.Name.data
             disciplines = form.disciplines.data
             deptCode = form.deptCode.data
+            startTime = form.meetTime.data
+            meetDays= form.meetingDay.data
+            length = form.meetLength.data
 
-            course = sections(Code = Code, Name = Name, Disciplines = disciplines, DepartmentCode = deptCode)
+            course = sections(Code = Code, Name = Name, Disciplines = disciplines, DepartmentCode = deptCode,StartTime=startTime, Day=meetDays, Length = length )
             db.session.add(course)
             db.session.commit()
 
@@ -263,14 +266,3 @@ def importFunction():
 def logout():
     logout_user()
     return redirect(url_for('home'))    
-
-
-@app.route('/courses')
-def index():
-    conn = get_db_connection()
-    cur = conn.cursor()
-    cur.execute('SELECT * FROM course;')
-    books = cur.fetchall()
-    cur.close()
-    conn.close()
-    return render_template('index.html', course=course)
