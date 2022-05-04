@@ -5,6 +5,7 @@ from wtforms import StringField, IntegerField, PasswordField, SubmitField
 from wtforms.validators import InputRequired, Length, Email, EqualTo, ValidationError, NumberRange
 from capstone import db
 from capstone.models import accounts
+from pathlib import Path
 
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[InputRequired("Username must be 5-20 characters"), Length(min=5, max=20)])
@@ -54,7 +55,7 @@ class classForm(FlaskForm):
     deptCode = StringField('Department Code', validators=[InputRequired()])
     meetingDay = StringField('Meeting Days (M, T, W, R, F ex MWF or TR)', validators=[InputRequired()])
     meetTime = IntegerField('Start time (24 hour time with no :)', validators=[InputRequired()])
-    meetLegnth = IntegerField('Section Meeting Length', validators=[InputRequired()])
+    meetLength = IntegerField('Section Meeting Length', validators=[InputRequired()])
     submit = SubmitField('Add Section')
 
 class importForm(FlaskForm):

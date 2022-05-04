@@ -153,7 +153,7 @@ def importData(prof_or_course, record_num, file_path):
       AllCourses.append(Course_temp)
       print(Course_temp)
 
-      section = sections(Code=code, DepartmentCode=dep_num, Day=day, Length=length, StartTime=startTime, Disciplines=disc, Periods=periods, Name=name, instructor=None, time = time)
+      section = sections(Code=code, DepartmentCode=dep_num, Day=day, Length=length, StartTime=startTime, Disciplines=disc, Periods=periods, Name=name, instructor=None, Time = time)
       db.session.add(section)
       db.session.commit()
     # add data to instructor queue

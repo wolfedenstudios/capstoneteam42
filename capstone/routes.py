@@ -12,6 +12,8 @@ from capstone.models import accounts, instructors, sections, output_schedule
 from flask_login import current_user, login_required, login_user, logout_user
 from capstone.scheduler import importData, main
 from werkzeug.utils import secure_filename
+from pathlib import Path
+
 
 @app.route('/')
 def home():
@@ -242,8 +244,10 @@ def importFunction():
     db.session.query(instructors).delete()
     db.session.query(sections).delete()
     db.session.commit()
-    importData(0,9,os.path.abspath('capstone/static/prof_data-2.dat'))
-    importData(1, 29, os.path.abspath('capstone/static/course_data-4.dat'))
+    teacherPath = Path('capstone/static/instructors.dat').resolve()
+    classPath = Path('capstone/static/sections.dat').resolve()
+    importData(0,9, teacherPath)
+    importData(1, 29, classPath)
     return redirect(url_for('hub'))
 
 
